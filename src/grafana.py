@@ -1,6 +1,7 @@
 import os
 import requests
 import logging
+import multiprocessing as mp
 from urllib.parse import urlencode
 
 logger = logging.getLogger(__name__)
@@ -68,6 +69,71 @@ def extract_panels(panels: list, panel_id_to_names: dict, panel_name_to_ids: dic
 
     return extracted_panels
 
+def parallel_process(each_panel: str, g_url: str, d_uid: str, d_session: requests.Session, d_output: str, d_query_params: dict) -> None:
+    """
+    Function to process each panel at the lowest atomic level.
+
+    Args:
+        each_panel (str): Each single panel
+        g_url (str): Grafana url
+        d_uid (str): dashboard uid
+        d_session (requests.Session): dashboard session
+        d_output (str): dashboard output path
+        d_query_params (dict): dashboard query parameters
+
+    Returns:
+        None
+    """
+    # Construct render URL with custom parameters
+    render_query_params = {
+        "panelId": each_panel["panel_id"],
+        "orgId": d_query_params.get("orgId", ["1"])[0],
+        "width": "1280",
+        "height": "720",
+        "tz": "UTC",
+        **{k: v[0] for k, v in d_query_params.items()},  # Add additional parameters
+    }
+    render_url = f"{g_url}/render/d-solo/{d_uid}?{urlencode(render_query_params)}"
+
+    # Download the image
+    image_response = d_session.get(render_url, stream=True)
+    image_response.raise_for_status()
+
+    # Save the image
+    panel_name = f"panel_{each_panel["panel_id"]}" if each_panel["panel_title"] == "" else f"panel_{each_panel["panel_id"]}_{each_panel["panel_title"]}"
+    image_path = os.path.join(d_output, f"{panel_name}.jpeg")
+    each_panel["image_path"] = image_path
+    with open(image_path, "wb") as image_file:
+        for chunk in image_response.iter_content(1024):
+            image_file.write(chunk)
+
+    logger.info(f"Exported {panel_name} to {image_path}")
+
+
+def multi_process(panels_chunk: list, g_url: str, d_uid: str, d_session: requests.Session, d_output: str, d_query_params: dict) -> None:
+    """
+    Function to process each chunk parallely.
+
+    Args:
+        panels_chunk (list): A chunk of extracted panels
+        g_url (str): Grafana url
+        d_uid (str): dashboard uid
+        d_session (requests.Session): dashboard session
+        d_output (str): dashboard output path
+        d_query_params (dict): dashboard query parameters
+
+    Returns:
+        None
+    """
+    jobs = []
+    for each_panel in panels_chunk:
+        process = mp.Process(target=parallel_process, args=(each_panel, g_url, d_uid, d_session, d_output, d_query_params,))
+        jobs.append(process)
+        process.start()
+
+    for proc in jobs:
+        proc.join()
+
 def export_panels(extracted_panels: list, g_url: str, d_uid: str, d_session: requests.Session, d_output: str, d_query_params: dict) -> None:
     """
     Export all the extracted panels to the configured output directory.
@@ -85,28 +151,10 @@ def export_panels(extracted_panels: list, g_url: str, d_uid: str, d_session: req
     """
     logger.debug(extracted_panels)
     os.makedirs(d_output, exist_ok=True)
-    for each_panel in extracted_panels:
-        # Construct render URL with custom parameters
-        render_query_params = {
-            "panelId": each_panel["panel_id"],
-            "orgId": d_query_params.get("orgId", ["1"])[0],
-            "width": "1280",
-            "height": "720",
-            "tz": "UTC",
-            **{k: v[0] for k, v in d_query_params.items()},  # Add additional parameters
-        }
-        render_url = f"{g_url}/render/d-solo/{d_uid}?{urlencode(render_query_params)}"
 
-        # Download the image
-        image_response = d_session.get(render_url, stream=True)
-        image_response.raise_for_status()
-
-        # Save the image
-        panel_name = f"panel_{each_panel["panel_id"]}" if each_panel["panel_title"] == "" else f"panel_{each_panel["panel_id"]}_{each_panel["panel_title"]}"
-        image_path = os.path.join(d_output, f"{panel_name}.jpeg")
-        each_panel["image_path"] = image_path
-        with open(image_path, "wb") as image_file:
-            for chunk in image_response.iter_content(1024):
-                image_file.write(chunk)
-
-        logger.info(f"Exported {panel_name} to {image_path}")
+    limit = (75 * mp.cpu_count())//100
+    while len(extracted_panels) > limit:
+        extracted_panels_chunk = extracted_panels[0:limit]
+        multi_process(extracted_panels_chunk, g_url, d_uid, d_session, d_output, d_query_params)
+        extracted_panels = extracted_panels[limit:]
+    multi_process(extracted_panels, g_url, d_uid, d_session, d_output, d_query_params)
