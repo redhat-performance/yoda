@@ -5,6 +5,8 @@ import logging
 import warnings
 from urllib.parse import urlparse, parse_qs
 from src.grafana import recurse_panels, export_panels, extract_panels
+from src.deplot import google_deplot
+from tabulate import tabulate
 from utils.logging import configure_logging
 from utils.yaml_parser import load_config
 
@@ -71,8 +73,19 @@ def process_grafana_config(grafana_data: list):
             panels = dashboard_data["dashboard"]["panels"]
             panel_id_to_names, panel_name_to_ids = dict(), dict()
             recurse_panels(panels, panel_id_to_names, panel_name_to_ids)
+
+            data = [["Panel ID", "Panel Name"]]
+            for panel_id, panel_name in panel_id_to_names.items():
+                data.append([panel_id, panel_name])
+            table = tabulate(data, headers="firstrow", tablefmt="grid")
+            for line in table.split('\n'):
+                logger.info(line)
+
             extracted_panels = extract_panels(each_dashboard['panels'], panel_id_to_names, panel_name_to_ids)
             export_panels(extracted_panels, g_url, d_uid, d_session, d_output, d_query_params)
+            logger.debug(extracted_panels)
+            for each_panel in extracted_panels:
+                google_deplot([each_panel['image_path']], "Generate underlying data table of the figure below. Also make sure you capture the headings and relevant values accurately")
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:

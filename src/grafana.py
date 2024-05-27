@@ -104,6 +104,7 @@ def export_panels(extracted_panels: list, g_url: str, d_uid: str, d_session: req
         # Save the image
         panel_name = f"panel_{each_panel["panel_id"]}" if each_panel["panel_title"] == "" else f"panel_{each_panel["panel_id"]}_{each_panel["panel_title"]}"
         image_path = os.path.join(d_output, f"{panel_name}.jpeg")
+        each_panel["image_path"] = image_path
         with open(image_path, "wb") as image_file:
             for chunk in image_response.iter_content(1024):
                 image_file.write(chunk)
