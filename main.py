@@ -9,6 +9,7 @@ from src.deplot import google_deplot
 from tabulate import tabulate
 from utils.logging import configure_logging
 from utils.yaml_parser import load_config
+from utils.utils import create_grafana_session
 
 
 warnings.filterwarnings("ignore", message="Unverified HTTPS request.*")
@@ -57,10 +58,8 @@ def process_grafana_config(grafana_data: list):
             d_uid = parsed_d_raw_url.path.split('/')[2]
             d_query_params = parse_qs(parsed_d_raw_url.query)
 
-            d_session = requests.Session()
-            d_session.verify = False
-            d_session.auth = (g_username, g_password)
 
+            d_session = create_grafana_session(g_username, g_password)
             d_url = f"{g_url}/api/dashboards/uid/{d_uid}"
             response = d_session.get(d_url)
             response.raise_for_status()
@@ -87,9 +86,9 @@ def process_grafana_config(grafana_data: list):
                 return 
             
             extracted_panels = extract_panels(each_dashboard['panels'], panel_id_to_names, panel_name_to_ids)
-            export_panels(extracted_panels, g_url, d_uid, d_session, d_output, d_query_params)
-            logger.debug(extracted_panels)
-            for each_panel in extracted_panels:
+            updated_panels = export_panels(extracted_panels, g_url, d_uid, g_username, g_password, d_output, d_query_params)
+            logger.debug(updated_panels)
+            for each_panel in updated_panels:
                 google_deplot([each_panel['image_path']], "Generate underlying data table of the figure below:")
 
 if __name__ == "__main__":
