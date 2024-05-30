@@ -74,6 +74,7 @@ def process_grafana_config(grafana_data: list):
             panel_id_to_names, panel_name_to_ids = dict(), dict()
             recurse_panels(panels, panel_id_to_names, panel_name_to_ids)
 
+            logger.info("Full list of dashboard panels")
             data = [["Panel ID", "Panel Name"]]
             for panel_id, panel_name in panel_id_to_names.items():
                 data.append([panel_id, panel_name])
@@ -81,11 +82,15 @@ def process_grafana_config(grafana_data: list):
             for line in table.split('\n'):
                 logger.info(line)
 
+            if 'panels' not in each_dashboard or not each_dashboard['panels']:
+                logger.info("No panels specified in configuration for extraction. Hence skipping this dashboard")
+                return 
+            
             extracted_panels = extract_panels(each_dashboard['panels'], panel_id_to_names, panel_name_to_ids)
             export_panels(extracted_panels, g_url, d_uid, d_session, d_output, d_query_params)
             logger.debug(extracted_panels)
             for each_panel in extracted_panels:
-                google_deplot([each_panel['image_path']], "Generate underlying data table of the figure below. Also make sure you capture the headings and relevant values accurately")
+                google_deplot([each_panel['image_path']], "Generate underlying data table of the figure below:")
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:

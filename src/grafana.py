@@ -17,6 +17,7 @@ def recurse_panels(panels: dict, panel_id_to_names: dict, panel_name_to_ids: dic
     Returns:
         None
     """
+    logger.info(panels)
     for panel in panels:
         # Check if the panel is of type "row" and skip it
         if panel.get("type") == "row":
@@ -86,16 +87,21 @@ def export_panels(extracted_panels: list, g_url: str, d_uid: str, d_session: req
     logger.debug(extracted_panels)
     os.makedirs(d_output, exist_ok=True)
     for each_panel in extracted_panels:
-        # Construct render URL with custom parameters
-        render_query_params = {
-            "panelId": each_panel["panel_id"],
-            "orgId": d_query_params.get("orgId", ["1"])[0],
-            "width": "1280",
-            "height": "720",
-            "tz": "UTC",
-            **{k: v[0] for k, v in d_query_params.items()},  # Add additional parameters
-        }
-        render_url = f"{g_url}/render/d-solo/{d_uid}?{urlencode(render_query_params)}"
+        # Start with fixed parameters as a list of tuples
+        render_query_params = [
+            ("panelId", each_panel["panel_id"]),
+            ("orgId", d_query_params.get("orgId", ["1"])[0]),
+            ("width", "1280"),
+            ("height", "720"),
+            ("tz", "UTC")
+        ]
+
+        # Add additional parameters as tuples, allowing redundant keys
+        additional_params = [(k, v) for k, vals in d_query_params.items() for v in vals]
+        render_query_params.extend(additional_params)
+        
+        # render url of the panel
+        render_url = f"{g_url}/render/d-solo/{d_uid}?{urlencode(render_query_params, doseq=True)}"
 
         # Download the image
         image_response = d_session.get(render_url, stream=True)
