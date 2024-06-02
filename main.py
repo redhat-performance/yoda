@@ -6,7 +6,7 @@ import warnings
 import multiprocessing as mp
 from urllib.parse import urlparse, parse_qs
 from src.grafana import recurse_panels, export_panels, extract_panels
-from src.deplot import google_deplot
+from src.deplot import image_deplot
 from tabulate import tabulate
 from utils.logging import configure_logging
 from utils.yaml_parser import load_config
@@ -24,7 +24,7 @@ def cli(max_content_width=120):
 
 @click.command()
 @click.option("--config", default="config.yaml", help="Path to the configuration file")
-@click.option("--debug", is_flag=True, help="log level ")
+@click.option("--debug", is_flag=True, help="log level")
 @click.option("--concurrency", default=75, type=int, help="Number of concurrent processes")
 def generate(**kwargs):
     """insight generator is the cli tool to auto generate readouts.
@@ -76,8 +76,13 @@ def process_grafana_config(grafana_data: list, concurrency: int) -> None:
         logger.debug("Full list of exported panels")
         logger.debug(updated_panels)
 
-        for each_panel in updated_panels:
-            google_deplot([each_panel['image_path']], "Generate underlying data table of the figure below:")
+        processed_panels = []
+        for i in range(0, len(updated_panels), parallelism):
+            panel_chunk = updated_panels[i: i + parallelism]
+            processed_panels.extend(multi_process(panel_chunk, image_deplot, ("Generate underlying data table of the figure below:")))
+        processed_panels = flatten_list(processed_panels)
+        logger.debug("Panels with tabular data")
+        logger.debug(processed_panels)
 
 def process_dashboard(each_dashboard: dict, args: tuple, return_dict: dict, idx: int) -> None:
     """
@@ -115,12 +120,14 @@ def process_dashboard(each_dashboard: dict, args: tuple, return_dict: dict, idx:
     panel_id_to_names, panel_name_to_ids = dict(), dict()
     recurse_panels(panels, panel_id_to_names, panel_name_to_ids)
 
-    logger.info("Full list of dashboard panels")
-    data = [["Panel ID", "Panel Name"]]
-    for panel_id, panel_name in panel_id_to_names.items():
-        data.append([panel_id, panel_name])
-    table = tabulate(data, headers="firstrow", tablefmt="grid")
-    logger.info("\n" + table)
+    if 'expand' in each_dashboard and each_dashboard['expand']:
+        data = [["Panel ID", "Panel Name"]]
+        for panel_id, panel_name in panel_id_to_names.items():
+            data.append([panel_id, panel_name])
+        heading_row = [["Dashboard:", d_alias]]
+        full_table = heading_row + data
+        table = tabulate(full_table, headers="firstrow", tablefmt="grid")
+        logger.info("\n" + table)
 
     if 'panels' not in each_dashboard or not each_dashboard['panels']:
         logger.info("No panels specified in configuration for extraction. Hence skipping this dashboard")
