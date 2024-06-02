@@ -10,6 +10,4 @@ def google_deplot(image_paths: list, query: str):
 
     inputs = processor(images=image, text=query, return_tensors="pt")
     predictions = model.generate(**inputs, max_new_tokens=512)
-    decoded_version = processor.decode(predictions[0], skip_special_tokens=True)
-    print(type(decoded_version))
-    print(decoded_version)
+    print(processor.decode(predictions[0], skip_special_tokens=True))

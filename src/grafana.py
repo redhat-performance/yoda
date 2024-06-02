@@ -3,7 +3,7 @@ import requests
 import logging
 import multiprocessing as mp
 from urllib.parse import urlencode
-from utils.utils import create_grafana_session
+from utils.utils import create_grafana_session, multi_process
 
 logger = logging.getLogger(__name__)
 
@@ -70,23 +70,20 @@ def extract_panels(panels: list, panel_id_to_names: dict, panel_name_to_ids: dic
 
     return extracted_panels
 
-def parallel_process(each_panel: str, g_url: str, d_uid: str, g_username: str, g_password: str, d_output: str, d_query_params: dict, return_dict: dict) -> None:
+def process_panel(each_panel: str, args: tuple, return_dict: dict, idx: int) -> None:
     """
     Function to process each panel at the lowest atomic level.
 
     Args:
         each_panel (str): Each single panel
-        g_url (str): Grafana url
-        d_uid (str): dashboard uid
-        g_username (str): grafana username
-        g_password (str): grafana password
-        d_output (str): dashboard output path
-        d_query_params (dict): dashboard query parameters
+        args (tuple): full list of arguments to process
         return_dict (dict): shared dictionary across the threads
+        idx (int): unique index to store thread data
 
     Returns:
         None
     """
+    g_url, d_uid, g_username, g_password, d_output, d_query_params = args
     try:
         # Create new session for each thread.
         d_session = create_grafana_session(g_username, g_password)
@@ -120,40 +117,11 @@ def parallel_process(each_panel: str, g_url: str, d_uid: str, g_username: str, g
                 image_file.write(chunk)
 
         logger.info(f"Exported {panel_name} to {image_path}")
-        return_dict[each_panel['panel_id']] = each_panel
+        return_dict[idx] = each_panel
     except requests.RequestException as e:
         logger.error(f"Error exporting panel {each_panel['panel_id']}: {e}")
 
-
-def multi_process(panels_chunk: list, g_url: str, d_uid: str, g_username: str, g_password: str, d_output: str, d_query_params: dict) -> None:
-    """
-    Function to process each chunk parallely.
-
-    Args:
-        panels_chunk (list): A chunk of extracted panels
-        g_url (str): Grafana url
-        d_uid (str): dashboard uid
-        g_username (str): grafana username
-        g_password (str): grafana password
-        d_output (str): dashboard output path
-        d_query_params (dict): dashboard query parameters
-
-    Returns:
-        None
-    """
-    manager = mp.Manager()
-    return_dict = manager.dict()
-    jobs = []
-    for each_panel in panels_chunk:
-        process = mp.Process(target=parallel_process, args=(each_panel, g_url, d_uid, g_username, g_password, d_output, d_query_params, return_dict))
-        jobs.append(process)
-        process.start()
-
-    for proc in jobs:
-        proc.join()
-    return [return_dict[panel_id] for panel_id in return_dict]
-
-def export_panels(extracted_panels: list, g_url: str, d_uid: str, g_username: str, g_password: str, d_output: str, d_query_params: dict) -> None:
+def export_panels(extracted_panels: list, g_url: str, d_uid: str, g_username: str, g_password: str, d_output: str, d_query_params: dict, concurrency: int) -> None:
     """
     Export all the extracted panels to the configured output directory.
 
@@ -165,20 +133,17 @@ def export_panels(extracted_panels: list, g_url: str, d_uid: str, g_username: st
         g_password (str): grafana password
         d_output (str): dashboard output path
         d_query_params (dict): dashboard query parameters
+        concurrency (int): concurrency to apply for multiprocessing
 
     Returns:
         None
     """
-    logger.debug(extracted_panels)
     os.makedirs(d_output, exist_ok=True)
 
-
-    chunk_size = (75 * mp.cpu_count())//100
+    chunk_size = (concurrency * mp.cpu_count())//100
     updated_panels = []
     for i in range(0, len(extracted_panels), chunk_size):
         panels_chunk = extracted_panels[i:i + chunk_size]
-        updated_panels.extend(multi_process(panels_chunk, g_url, d_uid, g_username, g_password, d_output, d_query_params))
-    
-    # At this point, `updated_panels` should contain all the panels with the 'image_path' key included
-    logger.debug(updated_panels)
+        updated_panels.extend(multi_process(panels_chunk, process_panel, (g_url, d_uid, g_username, g_password, d_output, d_query_params)))
+
     return updated_panels
