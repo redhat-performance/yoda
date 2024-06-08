@@ -166,3 +166,7 @@ cython_debug/
 .vscode/
 *_panels
 *env
+
+# Google api credentials
+credentials.json
+token.json

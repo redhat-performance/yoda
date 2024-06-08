@@ -13,7 +13,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'insight-creator = main:generate',
+            'insight-creator = main:cli',
         ],
     },
     packages=find_packages(),

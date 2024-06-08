@@ -18,7 +18,7 @@ def image_deplot(each_panel: dict, args: tuple, return_dict: dict, idx: int) -> 
     processor = Pix2StructProcessor.from_pretrained('google/deplot', legacy=False)
     model = Pix2StructForConditionalGeneration.from_pretrained('google/deplot')
 
-    image = Image.open(each_panel['image_path'])
+    image = Image.open(each_panel['panel_image'])
 
     inputs = processor(images=image, text=query, return_tensors="pt")
     predictions = model.generate(**inputs, max_new_tokens=512)
@@ -27,6 +27,6 @@ def image_deplot(each_panel: dict, args: tuple, return_dict: dict, idx: int) -> 
     decoded_output = decoded_output.replace('<0x0A>', '\n')
     data_lines = [line.strip() for line in decoded_output.strip().split('\n')]
     table = data_lines[0] + "" + data_lines[1] + "\n" + "\n".join(data_lines[2:])
-    each_panel['data_table'] = table
+    each_panel['panel_text'] = table
 
     return_dict[idx] = each_panel
