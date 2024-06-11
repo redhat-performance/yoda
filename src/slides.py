@@ -72,10 +72,14 @@ def get_slide_info(service: Any, presentation_id: str, expand: bool, csv_path=""
                 slide_data['images'][element['objectId']] = element['image'].get('contentUrl', None)
             
             # Extract text information
-            text_elements = element.get('shape', {}).get('text', {}).get('textElements', [])
-            for text_element in text_elements:
-                if 'textRun' in text_element:
-                    slide_data['texts'][element['objectId']] = text_element['textRun']['content']
+            if 'shape' in element and 'text' in element['shape']:
+                text_elements = element['shape']['text'].get('textElements', [])
+                text_runs = []
+                for text_element in text_elements:
+                    if 'textRun' in text_element:
+                        text_runs.append(text_element['textRun']['content'])
+                if text_runs:
+                    slide_data['texts'][element['objectId']] = ''.join(text_runs)
         
         slide_info[slide_id] = slide_data
         data.append([idx + 1, slide_id, json.dumps(slide_data, indent=2)])
@@ -134,6 +138,16 @@ def replace_images_and_text(service, presentation_id, slide_info, slide_mapping)
                         logger.info(f"Text: {each_text} is not found in slide: {slide}. Hence skipping it")
                         continue
                     else:
+                        # Create a request to delete the existing text
+                        requests.append({
+                            'deleteText': {
+                                'objectId': each_text,
+                                'textRange': {
+                                    'type': 'ALL'
+                                }
+                            }
+                        })
+                        # Create a request to insert new text
                         requests.append({
                             'insertText': {
                                 'objectId': each_text,

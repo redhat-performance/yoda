@@ -1,8 +1,8 @@
 grafana :
   - alias: 'perfscale dev grafana'
     url: 'https://your-grafana:3000'
-    username: 'XXXXXXXX'
-    password: 'XXXXXXXX'
+    username: 'XXXXXX'
+    password: 'XXXXXX'
  
     dashboards:
     - alias: 'ingress-perf edge'
@@ -234,8 +234,8 @@ grafana :
           context: 'Average CPU Usage for kubelet in node-density-heavy 24 nodes test'
         - alias: 'Max RSS Usage kubelet'
           id: 548
-          height: 120
-          width: 787
+          height: 104
+          width: 778
           context: 'Max RSS Usage for kubelet in node-density-heavy 24 nodes test'
  
     - alias: 'kube-burner ocp node-density podready latency 24 nodes'
@@ -305,12 +305,12 @@ grafana :
         - alias: 'Average CPU Usage kube-apiserver 249 nodes'
           id: 536
           height: 108
-          width: 545
+          width: 554
           context: 'Average kube-apiserver cpu usage for a 249 nodes cluster'
         - alias: 'Max Aggregated RSS Usage kube-apiserver 249 nodes'
           id: 608
           height: 108
-          width: 539
+          width: 516
           context: 'Maximum kube-apiserver aggregated RSS usage for a 249 nodes cluster'
  
     - alias: 'kube-controller-manager cpu/memory usage 249 nodes'
@@ -319,13 +319,13 @@ grafana :
       panels:
         - alias: 'Average CPU Usage kube-controller-manager 249 nodes'
           id: 536
-          height: 115
-          width: 550
+          height: 105
+          width: 554
           context: 'Average kube-controller-manager cpu usage for a 249 nodes cluster'
         - alias: 'Max Aggregated RSS Usage kube-controller-manager 249 nodes'
           id: 608
-          height: 108
-          width: 539
+          height: 109
+          width: 515
           context: 'Maximum kube-controller-manager aggregated RSS usage for a 249 nodes cluster'
  
     - alias: 'etcd cpu/memory usage 249 nodes'
@@ -334,13 +334,13 @@ grafana :
       panels:
         - alias: 'Average CPU Usage etcd 249 nodes'
           id: 534
-          height: 108
-          width: 550
+          height: 115
+          width: 551
           context: 'Average etcd cpu usage for a 249 nodes cluster'
         - alias: 'Max Aggregated RSS Usage etcd 249 nodes'
           id: 599
           height: 115
-          width: 539
+          width: 554
           context: 'Maximum etcd aggregated RSS usage for a 249 nodes cluster'
  
     - alias: '24 node - CPU usage masters'
@@ -349,13 +349,13 @@ grafana :
       panels:
         - alias: 'CPU usage masters 24 nodes'
           id: 537
-          height: 114
-          width: 547
+          height: 130
+          width: 563
           context: 'CPU usage for master nodes'
         - alias: 'Maximum aggregated memory usage masters 24 nodes'
           id: 646
-          height: 114
-          width: 542
+          height: 130
+          width: 562
           context: 'Maximum aggregated memory usage for master nodes'
  
     - alias: '120 node - CPU usage masters'
@@ -364,13 +364,13 @@ grafana :
       panels:
         - alias: 'CPU usage masters 120 nodes'
           id: 537
-          height: 114
-          width: 571
+          height: 124
+          width: 563
           context: 'CPU usage for master nodes'
         - alias: 'Maximum aggregated memory usage masters 120 nodes'
           id: 646
-          height: 114
-          width: 519
+          height: 124
+          width: 562
           context: 'Maximum aggregated memory usage for master nodes'
  
     - alias: '249 node - CPU usage masters'
@@ -379,13 +379,13 @@ grafana :
       panels:
         - alias: 'CPU usage masters 249 nodes'
           id: 537
-          height: 105
-          width: 542
+          height: 115
+          width: 563
           context: 'CPU usage for master nodes'
         - alias: 'Maximum aggregated memory usage masters 249 nodes'
           id: 646
-          height: 105
-          width: 545
+          height: 115
+          width: 563
           context: 'Maximum aggregated memory usage for master nodes'
  
     - alias: 'kube-apiserver request latency - 249 nodes'

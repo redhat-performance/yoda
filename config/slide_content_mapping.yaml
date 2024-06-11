@@ -3,3 +3,85 @@ slide_info:
     images:
       g2e4672f2781_0_13: '../insight-creator/ingress_perf_panels/panel_91_RPS edge.png'
       g2e4672f2781_0_14: '../insight-creator/ingress_perf_panels/panel_98_Average latency usage edge.png'
+  g2e457098d7b_0_9:
+    images:
+      g2e457098d7b_0_14: '../insight-creator/ingress_perf_panels/panel_91_RPS http.png'
+      g2e457098d7b_0_15: '../insight-creator/ingress_perf_panels/panel_98_Average latency usage http.png'
+  g2e457098d7b_0_18:
+    images:
+      g2e457098d7b_0_23: '../insight-creator/ingress_perf_panels/panel_91_RPS passthrough.png'
+      g2e457098d7b_0_24: '../insight-creator/ingress_perf_panels/panel_98_Average latency usage passthrough.png'
+  g2e457098d7b_0_27:
+    images:
+      g2e457098d7b_0_32: '../insight-creator/ingress_perf_panels/panel_91_RPS reencrypt.png'
+      g2e457098d7b_0_33: '../insight-creator/ingress_perf_panels/panel_98_Average latency usage reencrypt.png'
+  g2e457098d7b_0_226:
+    images:
+      g2e457098d7b_0_231: '../insight-creator/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 64.png'
+      g2e457098d7b_0_232: '../insight-creator/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 1024.png'
+  g2e457098d7b_0_235:
+    images:
+      g2e457098d7b_0_240: '../insight-creator/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 4096.png'
+      g2e457098d7b_0_241: '../insight-creator/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 8192.png'
+      g2e457098d7b_0_242: '../insight-creator/k8s_netperf_panels/panel_167_Latency netperf Node to Node TCP 1024.png'
+  g2e457098d7b_0_245:
+    images:
+      g2e457098d7b_0_250: '../insight-creator/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 64.png'
+      g2e457098d7b_0_251: '../insight-creator/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 1024.png'
+  g2e457098d7b_0_254:
+    images:
+      g2e457098d7b_0_259: '../insight-creator/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 4096.png'
+      g2e457098d7b_0_260: '../insight-creator/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 8192.png'
+      g2e457098d7b_0_261: '../insight-creator/k8s_netperf_panels/panel_218_Latency netperf Pod to Pod TCP 1024.png'
+  g2e457098d7b_0_264:
+    images:
+      g2e457098d7b_0_269: '../insight-creator/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 64.png'
+      g2e457098d7b_0_270: '../insight-creator/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 1024.png'
+  g2e457098d7b_0_273:
+    images:
+      g2e457098d7b_0_278: '../insight-creator/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 4096.png'
+      g2e457098d7b_0_279: '../insight-creator/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 8192.png'
+      g2e457098d7b_0_280: '../insight-creator/k8s_netperf_panels/panel_254_Latency netperf Pod to Pod via Service TCP 1024.png'
+  p21:
+    images:
+      p21_i1071: '../insight-creator/node_density_heavy_panels/panel_536_Average CPU Usage kubelet.png'
+      p21_i1072: '../insight-creator/node_density_heavy_panels/panel_536_Average CPU Usage crio.png'
+      g2e457098d7b_0_473: '../insight-creator/node_density_heavy_panels/panel_548_Max RSS Usage kubelet.png'
+      g2e457098d7b_0_474: '../insight-creator/node_density_heavy_panels/panel_548_Max RSS Usage crio.png'
+  p22:
+    images:
+      p22_i1079: '../insight-creator/node_density_panels/panel_318_P99 Pod Ready latency 120 nodes.png'
+      p22_i1080: '../insight-creator/node_density_panels/panel_318_P99 Pod Ready latency 249 nodes.png'
+      p22_i1083: '../insight-creator/node_density_panels/panel_318_P99 Pod Ready latency 24 nodes.png'
+  p23:
+    images:
+      p23_i1090: '../insight-creator/node_density_cni_panels/panel_318_P99 Pod Ready latency 120 nodes.png'
+      p23_i1091: '../insight-creator/node_density_cni_panels/panel_318_P99 Pod Ready latency 249 nodes.png'
+      p23_i1092: '../insight-creator/node_density_cni_panels/panel_318_P99 Pod Ready latency 24 nodes.png'
+  p26:
+    images:
+      p26_i1113: '../insight-creator/control_plane_cpu_memory_panels/panel_536_Average CPU Usage kube-apiserver 249 nodes.png'
+      g2e4672f2781_0_1: '../insight-creator/control_plane_cpu_memory_panels/panel_536_Average CPU Usage kube-controller-manager 249 nodes.png'
+      g2e4672f2781_0_2: '../insight-creator/control_plane_cpu_memory_panels/panel_608_Max Aggregated RSS Usage kube-apiserver 249 nodes.png'
+      g2e4672f2781_0_3: '../insight-creator/control_plane_cpu_memory_panels/panel_534_Average CPU Usage etcd 249 nodes.png'
+      g2e4672f2781_0_4: '../insight-creator/control_plane_cpu_memory_panels/panel_599_Max Aggregated RSS Usage etcd 249 nodes.png'
+      g2e4672f2781_0_5: '../insight-creator/control_plane_cpu_memory_panels/panel_608_Max Aggregated RSS Usage kube-controller-manager 249 nodes.png'
+  p27:
+    images:
+      p27_i1122: '../insight-creator/node_cpu_memory_panels/panel_537_CPU usage masters 249 nodes.png'
+      p27_i1124: '../insight-creator/node_cpu_memory_panels/panel_537_CPU usage masters 24 nodes.png'
+      p27_i1126: '../insight-creator/node_cpu_memory_panels/panel_537_CPU usage masters 120 nodes.png'
+      g2e457098d7b_0_475: '../insight-creator/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 24 nodes.png'
+      g2e457098d7b_0_476: '../insight-creator/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 120 nodes.png'
+      g2e457098d7b_0_477: '../insight-creator/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 249 nodes.png'
+  p28:
+    images:
+      p28_i1134: '../insight-creator/control_plane_latency_panels/panel_636_Read Only API request P99 latency - resource scoped.png'
+      g2e4672f2781_0_6: '../insight-creator/control_plane_latency_panels/panel_615_Read Only API request P99 latency - namespace scoped.png'
+      g2e4672f2781_0_7: '../insight-creator/control_plane_latency_panels/panel_614_Read Only API request P99 latency - cluster scoped.png'
+      g2e4672f2781_0_8: '../insight-creator/control_plane_latency_panels/panel_616_Mutating API request P99 latency.png'
+  p29:
+    images:
+      p29_i1142: '../insight-creator/control_plane_latency_panels/panel_540_99th WAL fsync.png'
+      g2e4672f2781_0_9: '../insight-creator/control_plane_latency_panels/panel_542_99th Backend IO.png'
+      g2e4672f2781_0_10: '../insight-creator/control_plane_latency_panels/panel_543_99th Roundtrip.png'
