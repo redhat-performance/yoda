@@ -23,7 +23,7 @@ def cli(max_content_width=120):
     """
 
 @cli.command(name="generate")
-@click.option("--config", default="config.yaml", help="Path to the configuration file")
+@click.option("--config", default="config/grafana_config.yaml", help="Path to the configuration file")
 @click.option("--debug", is_flag=True, help="log level")
 @click.option("--concurrency", default=75, type=int, help="Number of concurrent processes")
 @click.option("--inference", is_flag=True, help="Flag for inference")

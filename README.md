@@ -19,7 +19,7 @@ Once you obtain the [Hugging Face Token](https://www.youtube.com/watch?v=Br7Aczn
 ```
 
 ## **Usage**
-### Generate sub-command
+### [generate] sub-command
 ```
 yoda generate --help
 Usage: yoda generate [OPTIONS]
@@ -58,8 +58,8 @@ grafana :
         - alias: 'RPS edge'
           id: 91
           name: 'RPS edge'
-          height: 244 # Default is 720 px
-          width: 1153 # Default is 1024 px
+          height: 244 # Default is 720 px (px = 96 * cm)
+          width: 1153 # Default is 1024 px (px = 96 * cm)
           context: 'RPS metric for edge termination'
         - alias: 'Average latency usage edge'
           id: 98
@@ -71,7 +71,7 @@ We can specify a list of grafana instances along with a list of grafana dashboar
 Each panel is uniquely identified using panel id (.i.e `id`) or its name (.i.e. `name`). Its usually recommended to use panel ids as they are very unique.
 
 As a user if you are unsure about panel ids in your dashboard, please use preview-dashboard subcommand for a preview. Results can be exported to a csv using `--csv` option.
-### Preview sub-command
+### [preview-dashboard] sub-command
 ```
 yoda preview-dashboard --help
 Usage: yoda preview-dashboard [OPTIONS]
@@ -119,28 +119,100 @@ We also have inference as an optional flag that can be enabled while you execute
 ```
 >> yoda generate --config config.yaml --concurrency 100 --debug --inference
 ```
-At present, we are using [google/deplot](https://huggingface.co/google/deplot) as our inference endpoint to summarize the image. Here is how the output of given panel data looks like after the inference.
+At present, we are using [google/deplot](https://huggingface.co/google/deplot) as our inference endpoint to summarize the image. Here is how the output of updated panel data looks like after the inference.
 
 #### **Output**
 ```
 [
-{
-  "panel_id": 91,
-  "panel_title": "RPS edge",
-  "panel_context": "RPS metric for edge termination",
-  "image_path": "ingress_perf_panels/panel_91_RPS edge.jpeg",
-  "data_table": "TITLE || RPS edge\n4.14 | 43.95\n41.65 | 41.65"
-},
-{
-  "panel_id": 98,
-  "panel_title": "Average latency usage reencrypt",
-  "panel_context": "Average latency usage for reencrypt termination",
-  "image_path": "ingress_perf_panels/panel_98_Average latency usage reencrypt.jpeg",
-  "data_table": "TITLE || avg.lat.us\n4.14 | 4.1\n36.43 ms | 36.43"
-}
+  {
+  'panel_id': 91, 
+  'panel_title': 'RPS edge', 
+  'panel_width': 1153, 
+  'panel_height': 244, 
+  'panel_context': 'RPS metric for edge termination', 
+  'panel_image': 'ingress_perf_panels/panel_91_RPS edge.png',     
+  'panel_text': 'TITLE | RPS edge| RPS edge\n4.14 | 43.95\n41.65 | 41.65'
+  }
 ]
 ```
 We are still exploring other models and will add more details soon.  
-At the end `yoda generate` sub-command spits out a csv file called panel_inference.csv that a user can take a look at. 
+At the end `yoda generate` sub-command spits out a csv file called `panel_inference.csv` that a user can take a look at. 
 
-Once we have the panels and their inference ready, a user can prepare a slide content mapping configuration file and get their existing presentation template updated.
+### Updating Slides
+#### Prerequisites
+* We need to have an already existing slide template prepared. For rosa testing please use this [template](https://docs.google.com/presentation/d/1DKDv2PTaRywqYLHXK7g1NPHxHz9Sn0sX/edit#slide=id.p1). Make a copy of it and note down the `Presentation ID`.
+* Create a project in your own google account using console. And make a note of the credentials that have access to goole drive and slides APIs.
+More details [here](https://developers.google.com/slides/api/quickstart/python).
+* Make sure that you have `credentials.json` file downloaded to your local which can be used by the tool to authenticate with google APIs.
+
+Once we have the panels and their inference ready, a user can prepare a slide content mapping configuration file and get their existing presentation template updated. Here is how the mapping file structure looksl like below. [Example](https://github.com/vishnuchalla/yoda/blob/main/config/slide_content_mapping.yaml)
+
+```
+slide_info:
+  g2e457098d7b_0_0:
+    images:
+      g2e4672f2781_0_13: 'new_image_to_be_replaced.png'
+      g2e4672f2781_0_14: '../yoda/ingress_perf_panels/panel_98_Average latency usage edge.png'
+    texts:
+      text_id: "new text to be replaced"
+```
+We can simply update the presentation with our new set of local images using `update-presentation` sub-command.
+
+### [update-presentation] sub-command
+```
+yoda update-presentation --help
+Usage: yoda update-presentation [OPTIONS]
+
+  sub-command to update a presentation. More details here:
+  https://developers.google.com/slides/api/quickstart/python
+
+Options:
+  --id TEXT            Presentation id to preview
+  --credentials TEXT   Google oauth credentials path
+  --slidemapping TEXT  Slide content mapping file
+  --help               Show this message and exit.
+```
+Here is an example usage command
+```
+yoda update-presentation --id '14Sn9jMWjfmqhzUglSZKmFnLSaYDVz4Kaekp0hEAj0Zg' --slidemapping config/slide_content_mapping.yaml
+```
+
+Now you might be worndering on where to get the slide and its object ids from in order to generate the slide content mapping. For that we have a `preview-presentation` sub-command as well.
+
+### [preview-presentation] sub-command
+```
+yoda preview-presentation --help
+Usage: yoda preview-presentation [OPTIONS]
+
+  sub-command to preview a presentation. More details here:
+  https://developers.google.com/slides/api/quickstart/python
+
+Options:
+  --id TEXT           Presentation id to preview
+  --credentials TEXT  Google oauth credentials path
+  --csv TEXT          .csv file path to output
+  --help              Show this message and exit.
+```
+Here is a example usage
+```
+yoda preview-presentation --id '14Sn9jMWjfmqhzUglSZKmFnLSaYDVz4Kaekp0hEAj0Zg'
+```
+The output is logged in a tabular format to the console. Can also be exported to a csv file using `--csv` option
+```
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Slide Number | Slide ID | Slide Data
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+1	         |  p1	    | {   "images": {     "p1_i889": "https://image_url"   },   "texts": {     "p1_i887": "\n",     "p1_i888": "\nOpenShift 4.15 Perf/Scale Test Report on ROSA\n OpenShift  Performance and Scale Team \n \n#forum-ocp-perfscale on Slack\n \n\n \n\n",     "p1_i890": "Red Hat Confidential\n"   } }
+--------------------------------------------------------------------------
+2            |  p2	    | {   "images": {     "p1_i889": "https://image_url"   },   "texts": {     "p1_i887": "\n",     "p1_i888": "\nOpenShift 4.15 Perf/Scale Test Report on ROSA\n OpenShift  Performance and Scale Team \n \n#forum-ocp-perfscale on Slack\n \n\n \n\n",     "p1_i890": "Red Hat Confidential\n"   } }
+```
+
+### Default Workflow
+Once we have all the above steps figured out and everything setup correctly as day 1 operations, please execute the below command as the default workflow.
+
+**Note**: This workflow uses the mapping defined in [config](https://github.com/vishnuchalla/yoda/tree/main/config) folder as default ones. Also looks for `credentails.json` in your root directory for google oauth.
+```
+yoda generate --concurrency 100 --presentation '14Sn9jMWjfmqhzUglSZKmFnLSaYDVz4Kaekp0hEAj0Zg' --debug
+```
