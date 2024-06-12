@@ -44,6 +44,7 @@ def preview_grafana_dashboard(d_url: str, g_username: str, g_password: str, expa
             with open(csv_path, mode='w', newline='', encoding='utf-8') as file:
                 writer = csv.writer(file)
                 writer.writerows(data)
+            logger.info(f"Dashboard preview written to file: {csv_path}")
         else:
             heading_row = [["Dashboard:", dashboard_title]]
             full_table = heading_row + data

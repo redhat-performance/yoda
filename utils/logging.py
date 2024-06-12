@@ -24,7 +24,7 @@ def configure_logging(log_level: str) -> None:
                 "level": log_level,
                 "handlers": ["console"],
             },
-            "insight-creator": {
+            "yoda": {
                 "level": log_level,
                 "handlers": ["console"],
                 "propagate": False,

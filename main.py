@@ -19,7 +19,7 @@ logger = None
 @click.group()
 def cli(max_content_width=120):
     """
-    insight generator is the cli tool to auto generate readouts.
+    yoda is the cli tool to auto generate readouts.
     """
 
 @cli.command(name="generate")
@@ -33,7 +33,7 @@ def cli(max_content_width=120):
 @click.option("--slidemapping", default="config/slide_content_mapping.yaml", help="Slide content mapping file")
 def generate(**kwargs):
     """
-    sub-command to generate a grafana panels and infer them.
+    sub-command to generate a grafana panels and infer them. Optionally executes the default worklfow to publish those results to a presentation.
     """
     level = logging.DEBUG if kwargs["debug"] else logging.INFO
     need_inference = True if kwargs["inference"] else False

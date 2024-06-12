@@ -1,11 +1,11 @@
-# readout-generator/setup.py
+# yoda/setup.py
 """
-setup.py for readout generator cli tool
+setup.py for yoda cli tool
 """
 from setuptools import setup, find_packages
 
 setup(
-    name='insight-creator',
+    name='yoda',
     version='1.0',
     py_modules=['main'],
     install_requires=[
@@ -13,7 +13,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'insight-creator = main:cli',
+            'yoda = main:cli',
         ],
     },
     packages=find_packages(),
