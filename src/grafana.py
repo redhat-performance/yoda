@@ -190,7 +190,7 @@ def export_panels(extracted_panels: list, g_url: str, d_uid: str, g_username: st
     """
     os.makedirs(d_output, exist_ok=True)
 
-    chunk_size = (concurrency * mp.cpu_count())//100
+    chunk_size = concurrency
     updated_panels = []
     for i in range(0, len(extracted_panels), chunk_size):
         panels_chunk = extracted_panels[i:i + chunk_size]

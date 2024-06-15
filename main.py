@@ -25,7 +25,7 @@ def cli(max_content_width=120):
 @cli.command(name="generate")
 @click.option("--config", default="config/grafana_config.yaml", help="Path to the configuration file")
 @click.option("--debug", is_flag=True, help="log level")
-@click.option("--concurrency", default=75, type=int, help="Number of concurrent processes")
+@click.option("--concurrency", is_flag=True, help="To enable concurrent operations")
 @click.option("--inference", is_flag=True, help="Flag for inference")
 @click.option("--csv", default="panel_inference.csv", help=".csv file path to output")
 @click.option("--presentation", default="", help="Presentation id to parse")
@@ -37,6 +37,7 @@ def generate(**kwargs):
     """
     level = logging.DEBUG if kwargs["debug"] else logging.INFO
     need_inference = True if kwargs["inference"] else False
+    concurrency = (75 * mp.cpu_count())//100 if kwargs["concurrency"] else 1
     configure_logging(level)
     global logger
     logger = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ def generate(**kwargs):
     logger.debug(config_data)
 
     # TODO: Add support for other data sources as well
-    process_grafana_config(config_data['grafana'], kwargs["concurrency"], kwargs["csv"], need_inference, kwargs["presentation"], kwargs["credentials"], kwargs["slidemapping"])
+    process_grafana_config(config_data['grafana'], concurrency, kwargs["csv"], need_inference, kwargs["presentation"], kwargs["credentials"], kwargs["slidemapping"])
 
 @cli.command(name="preview-dashboard")
 @click.option("--url", default="", help="Grafana dashboard url to preview")
@@ -131,22 +132,21 @@ def process_grafana_config(grafana_data: list, concurrency: int, inference_path:
         g_password = each_grafana['password']
 
         logger.info(f"Scraping grafana: {g_alias}")
-        parallelism = (concurrency * mp.cpu_count())//100
         if 'dashboards' not in each_grafana or not each_grafana['dashboards']:
             logger.info("No dashboards specified in configuration for extraction. Hence skipping this grafana")
             continue
         all_dashboards = each_grafana['dashboards']
 
         all_panels = []
-        for i in range(0, len(all_dashboards), parallelism):
-            dashboard_chunk = all_dashboards[i:i + parallelism]
+        for i in range(0, len(all_dashboards), concurrency):
+            dashboard_chunk = all_dashboards[i:i + concurrency]
             all_panels.extend(multi_process(dashboard_chunk, process_dashboard, (g_url, g_username, g_password, concurrency)))
         updated_panels = flatten_list(all_panels)
 
         if need_inference:
             processed_panels = []
-            for i in range(0, len(updated_panels), parallelism):
-                panel_chunk = updated_panels[i: i + parallelism]
+            for i in range(0, len(updated_panels), concurrency):
+                panel_chunk = updated_panels[i: i + concurrency]
                 processed_panels.extend(multi_process(panel_chunk, image_deplot, ("Generate underlying data table of the figure below:")))
             processed_panels = flatten_list(processed_panels)
             updated_panels = processed_panels
