@@ -1,7 +1,10 @@
 from transformers import Pix2StructProcessor, Pix2StructForConditionalGeneration
 from PIL import Image
+import logging
 import torch
 from torch.cuda.amp import autocast
+
+logger = logging.getLogger(__name__)
 
 def image_deplot(each_panel: dict, args: tuple, return_dict: dict, idx: int) -> None:
     """
@@ -21,9 +24,11 @@ def image_deplot(each_panel: dict, args: tuple, return_dict: dict, idx: int) -> 
     model = Pix2StructForConditionalGeneration.from_pretrained('google/deplot')
 
     if torch.cuda.is_available():
+        logger.info(f"GPU detected. Infering image: {each_panel["panel_image"]} using GPU")
         device = torch.device('cuda')
         model.to(device)
     else:
+        logger.info(f"No GPU detected. Running in CPU only mode for image: {each_panel["panel_image"]}")
         device = torch.device('cpu')
     
     image = Image.open(each_panel['panel_image'])

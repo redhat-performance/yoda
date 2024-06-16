@@ -29,7 +29,8 @@ Usage: yoda generate [OPTIONS]
 Options:
   --config TEXT          Path to the configuration file
   --debug                log level
-  --concurrency INTEGER  Number of concurrent processes
+  --concurrency          Flag to enable concurrency
+  --deplot               Flag for deplotting the image
   --inference            Flag for inference
   --csv TEXT             .csv file path to output
   --presentation TEXT    Presentation id to parse
@@ -108,34 +109,36 @@ This will give us an output as below
 Based on this information a user should be able to prepare their config with a list of panel ids to be scraped.
 
 ### **Multi Processing**
-`yoda generate` sub-command uses multiprocessing to perform all the actions in parallel. By default it spawns 75% of the cpu core threads in parallel to speed up its activity which can also be regulated by the below flag
+`yoda generate` sub-command can use multiprocessing to perform all the actions in parallel. By default it spawns 75% of the cpu core number of threads in parallel to speed up its activity.
 ```
->> yoda generate --config config.yaml --concurrency 100
+>> yoda generate --config config.yaml --concurrency
 ```
-The above command now triggers 100% of active cpu core threads to execute its tasks.
+The above command now triggers 75% of active cpu core threads to execute its tasks.
 
-### **Inference**
-We also have inference as an optional flag that can be enabled while you execute `yoda generate` sub-command. Example usage
+### **Deplot**
+We also have `--deplot` as an optional flag that can be enabled while you execute `yoda generate` sub-command. Example usage
 ```
->> yoda generate --config config.yaml --concurrency 100 --debug --inference
+>> yoda generate --config config.yaml --concurrency --debug --deplot
 ```
-At present, we are using [google/deplot](https://huggingface.co/google/deplot) as our inference endpoint to summarize the image. Here is how the output of updated panel data looks like after the inference.
+At present, we are using [google/deplot](https://huggingface.co/google/deplot) as our deplot endpoint. Here is how the output of updated panel data looks like after the deplot.
 
 #### **Output**
 ```
-[
-  {
-  'panel_id': 91, 
-  'panel_title': 'RPS edge', 
-  'panel_width': 1153, 
-  'panel_height': 244, 
-  'panel_context': 'RPS metric for edge termination', 
-  'panel_image': 'ingress_perf_panels/panel_91_RPS edge.png',     
-  'panel_text': 'TITLE | RPS edge| RPS edge\n4.14 | 43.95\n41.65 | 41.65'
-  }
-]
+'TITLE | RPS edge| RPS edge\n4.14 | 43.95\n41.65 | 41.65'
 ```
-We are still exploring other models and will add more details soon.  
+### **Inference** (Requires GPU with memory > 16GB)
+We also have `--inference` as an optional flag that can be enabled while you execute `yoda generate` sub-command. Example usage
+```
+>> yoda generate --config config.yaml --concurrency --debug --inference
+```
+At present, we are using [openbmb/MiniCPM-Llama3-V-2_5](https://huggingface.co/openbmb/MiniCPM-Llama3-V-2_5) as our inference endpoint to summarize the image. Here is how the output of updated panel data looks like after the inference.
+
+#### **Output**
+```
+The image is a bar chart with two bars representing different data points. The left bar is colored green and represents a value of 4.15, while the right bar is yellow and represents a value of 4.14. Both bars have additional information displayed as text: "41.65K req/s" for the green bar and "43.95K req/s" for the yellow bar. This suggests that the chart is comparing two quantities, possibly request rates, where the yellow bar has a slightly higher value than the green bar.
+``` 
+#### Note: `--deplot` and `--inference` falgs are mutually exclusive. 
+
 At the end `yoda generate` sub-command spits out a csv file called `panel_inference.csv` that a user can take a look at. 
 
 ### Updating Slides

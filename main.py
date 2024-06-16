@@ -8,6 +8,7 @@ from googleapiclient.discovery import build
 from urllib.parse import urlparse, parse_qs
 from src.grafana import export_panels, extract_panels, preview_grafana_dashboard
 from src.deplot import image_deplot
+from src.inference import image_inference
 from src.slides import authenticate_google_slides, get_slide_info, replace_images_and_text
 from utils.logging import configure_logging
 from utils.yaml_parser import load_config
@@ -26,6 +27,7 @@ def cli(max_content_width=120):
 @click.option("--config", default="config/grafana_config.yaml", help="Path to the configuration file")
 @click.option("--debug", is_flag=True, help="log level")
 @click.option("--concurrency", is_flag=True, help="To enable concurrent operations")
+@click.option("--deplot", is_flag=True, help="Flag for deplot")
 @click.option("--inference", is_flag=True, help="Flag for inference")
 @click.option("--csv", default="panel_inference.csv", help=".csv file path to output")
 @click.option("--presentation", default="", help="Presentation id to parse")
@@ -36,7 +38,10 @@ def generate(**kwargs):
     sub-command to generate a grafana panels and infer them. Optionally executes the default worklfow to publish those results to a presentation.
     """
     level = logging.DEBUG if kwargs["debug"] else logging.INFO
+    need_deplot = True if kwargs["deplot"] else False
     need_inference = True if kwargs["inference"] else False
+    if need_deplot and need_inference:
+        raise click.UsageError("Cannot use --deplot and --inference together.")
     concurrency = (75 * mp.cpu_count())//100 if kwargs["concurrency"] else 1
     configure_logging(level)
     global logger
@@ -45,7 +50,7 @@ def generate(**kwargs):
     logger.debug(config_data)
 
     # TODO: Add support for other data sources as well
-    process_grafana_config(config_data['grafana'], concurrency, kwargs["csv"], need_inference, kwargs["presentation"], kwargs["credentials"], kwargs["slidemapping"])
+    process_grafana_config(config_data['grafana'], concurrency, kwargs["csv"], need_deplot, need_inference, kwargs["presentation"], kwargs["credentials"], kwargs["slidemapping"])
 
 @cli.command(name="preview-dashboard")
 @click.option("--url", default="", help="Grafana dashboard url to preview")
@@ -109,7 +114,7 @@ def update_presentation(**kwargs):
     except Exception as e:
         logger.error(f"Please make sure the provided credentials are correct. Error: {e}")
 
-def process_grafana_config(grafana_data: list, concurrency: int, inference_path: str, need_inference: bool, presentation: str, credentials: str, slide_mapping: str) -> None:
+def process_grafana_config(grafana_data: list, concurrency: int, inference_path: str, need_deplot: bool, need_inference: bool, presentation: str, credentials: str, slide_mapping: str) -> None:
     """
     Function to process the grafana config.
 
@@ -117,6 +122,7 @@ def process_grafana_config(grafana_data: list, concurrency: int, inference_path:
         grafana_data (list): grafana configuration list
         concurrency (int): concurrency to implement parallelism
         inference_path (str): inference file path post processing
+        need_deplot (bool): flag to regulate deplot
         need_inference (bool): flag to regulate inference
         presentation (str): presentation id to parse
         credentials (str): credentails for google oauth
@@ -143,11 +149,18 @@ def process_grafana_config(grafana_data: list, concurrency: int, inference_path:
             all_panels.extend(multi_process(dashboard_chunk, process_dashboard, (g_url, g_username, g_password, concurrency)))
         updated_panels = flatten_list(all_panels)
 
-        if need_inference:
+        if need_deplot:
             processed_panels = []
             for i in range(0, len(updated_panels), concurrency):
                 panel_chunk = updated_panels[i: i + concurrency]
                 processed_panels.extend(multi_process(panel_chunk, image_deplot, ("Generate underlying data table of the figure below:")))
+            processed_panels = flatten_list(processed_panels)
+            updated_panels = processed_panels
+        elif need_inference:
+            processed_panels = []
+            for i in range(0, len(updated_panels), concurrency):
+                panel_chunk = updated_panels[i: i + concurrency]
+                processed_panels.extend(multi_process(panel_chunk, image_inference, ("Can you summarize this image?")))
             processed_panels = flatten_list(processed_panels)
             updated_panels = processed_panels
         
