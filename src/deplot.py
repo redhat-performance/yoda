@@ -49,7 +49,7 @@ def image_deplot(each_panel: dict, args: tuple, return_dict: dict, idx: int) -> 
         each_panel['panel_text'] = table
 
     except torch.cuda.OutOfMemoryError:
-        print("CUDA out of memory. Clearing cache and retrying...")
+        logger.info("CUDA out of memory. Clearing cache and retrying...")
         torch.cuda.empty_cache()
         return_dict[idx] = {"error": "CUDA out of memory"}
     

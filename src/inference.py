@@ -1,3 +1,4 @@
+import requests
 from PIL import Image
 from transformers import AutoModel, AutoTokenizer
 import logging
@@ -20,7 +21,32 @@ def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) 
         None
     """
     query = args
+    context = each_panel['panel_context'] if 'panel_context' in each_panel else ""
+    url = "http://q42-h03-dgx.rdu3.labs.perfscale.redhat.com:30080/inference/"
+    files = {
+        'file': open(each_panel["panel_image"], 'rb')
+    }
+    data = {
+        'context': context,
+        'query': query,
+    }
 
+    # Remote inference
+    try:
+        logger.info(f"Running remote inference for image: {each_panel["panel_image"]}")
+        response = requests.post(url, files=files, data=data)
+        response.raise_for_status()
+        each_panel['panel_text'] = response.text
+        return_dict[idx] = each_panel
+        files['file'].close()
+        return
+    except Exception as err:
+        logger.info(f"Unexpected error from remote inference: {err}")
+        logger.info(f"Checking for local inference for image: {each_panel["panel_image"]}")
+    finally:
+        files['file'].close()
+
+    # local inference
     if torch.cuda.is_available():
         logger.info(f"GPU detected. Proceeding with inference for image: {each_panel["panel_image"]}")
     else:
@@ -29,7 +55,6 @@ def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) 
         return
 
     image = Image.open(each_panel['panel_image']).convert('RGB')
-    context = each_panel['panel_context'] if 'panel_context' in each_panel else ""
     input_prompt = f"{context}\nQuestion: {query}"
     msgs = [{'role': 'user', 'content': input_prompt}]
 
@@ -52,7 +77,7 @@ def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) 
         each_panel['panel_text'] = res
 
     except torch.cuda.OutOfMemoryError:
-        print("CUDA out of memory. Clearing cache and retrying...")
+        logger.info("CUDA out of memory. Clearing cache and retrying...")
         torch.cuda.empty_cache()
         each_panel['panel_text'] = "error: CUDA out of memory"
         return_dict[idx] = each_panel

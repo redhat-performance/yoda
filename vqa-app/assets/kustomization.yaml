@@ -1,0 +1,5 @@
+resources:
+  - namespace.yaml
+  - openbmb-minicpm-secret.yaml
+  - vqa-app-service.yaml
+  - vqa-app-deployment.yaml

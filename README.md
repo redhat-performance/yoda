@@ -3,12 +3,13 @@ Tool to automate release readouts generation for OCP performance testing. Also i
 
 ## **Prerequisites**
 
-* [Hugging Face](https://huggingface.co/) Account
 * Grafana login
+* Create a project in your own google account using console. And make a note of the credentials that have access to goole drive and slides APIs.
+More details [here](https://developers.google.com/slides/api/quickstart/python).
 * Google slides and drive credentials with temporary external access (i.e use your own account). This is required only if you need to update your existing slides.
 
 ## **Build & Install**
-Once you obtain the [Hugging Face Token](https://www.youtube.com/watch?v=Br7AcznvzSA) for your account, Please follow the below steps for installation.
+Please follow the below steps for installation.
 ```
 >> git clone <repository_url>
 >> python3 -m venv venv
@@ -19,6 +20,15 @@ Once you obtain the [Hugging Face Token](https://www.youtube.com/watch?v=Br7Aczn
 ```
 
 ## **Usage**
+
+### Default Workflow
+Once we have all the above steps figured out and everything setup correctly as day 1 operations, please execute the below command as the default workflow.
+
+**Note**: This workflow uses the mapping defined in [config](https://github.com/vishnuchalla/yoda/tree/main/config) folder as default ones. Also looks for `credentails.json` in your root directory for google oauth.
+```
+yoda generate --concurrency 100 --presentation '14Sn9jMWjfmqhzUglSZKmFnLSaYDVz4Kaekp0hEAj0Zg' --debug
+```
+
 ### [generate] sub-command
 ```
 yoda generate --help
@@ -115,8 +125,16 @@ Based on this information a user should be able to prepare their config with a l
 ```
 The above command now triggers 75% of active cpu core threads to execute its tasks.
 
+## Local Inference
+
+## **Pre-requisites**
+[Hugging Face](https://huggingface.co/) Account. This is used to use an huggingface token to download models locally. Once you obtain the [Hugging Face Token](https://www.youtube.com/watch?v=Br7AcznvzSA) for your account, Please do export it
+```
+export HF_TOKEN=<YOUR_TOKEN>
+```
+
 ### **Deplot**
-We also have `--deplot` as an optional flag that can be enabled while you execute `yoda generate` sub-command. Example usage
+ We have `--deplot` as an optional flag that can be enabled while you execute `yoda generate` sub-command. Example usage
 ```
 >> yoda generate --config config.yaml --concurrency --debug --deplot
 ```
@@ -126,12 +144,15 @@ At present, we are using [google/deplot](https://huggingface.co/google/deplot) a
 ```
 'TITLE | RPS edge| RPS edge\n4.14 | 43.95\n41.65 | 41.65'
 ```
+
+## Remote Inference
+
 ### **Inference** (Requires GPU with memory > 16GB)
 We also have `--inference` as an optional flag that can be enabled while you execute `yoda generate` sub-command. Example usage
 ```
 >> yoda generate --config config.yaml --concurrency --debug --inference
 ```
-At present, we are using [openbmb/MiniCPM-Llama3-V-2_5](https://huggingface.co/openbmb/MiniCPM-Llama3-V-2_5) as our inference endpoint to summarize the image. Here is how the output of updated panel data looks like after the inference.
+At present, we are using [openbmb/MiniCPM-Llama3-V-2_5](https://huggingface.co/openbmb/MiniCPM-Llama3-V-2_5) as our inference endpoint [hosted on an AI cluster](https://github.com/vishnuchalla/yoda/tree/main/vqa-app#readme) to summarize the image. Here is how the output of updated panel data looks like after the inference.
 
 #### **Output**
 ```
@@ -141,11 +162,9 @@ The image is a bar chart with two bars representing different data points. The l
 
 At the end `yoda generate` sub-command spits out a csv file called `panel_inference.csv` that a user can take a look at. 
 
-### Updating Slides
+## Updating Slides
 #### Prerequisites
 * We need to have an already existing slide template prepared. For rosa testing please use this [template](https://docs.google.com/presentation/d/1DKDv2PTaRywqYLHXK7g1NPHxHz9Sn0sX/edit#slide=id.p1). Make a copy of it and note down the `Presentation ID`.
-* Create a project in your own google account using console. And make a note of the credentials that have access to goole drive and slides APIs.
-More details [here](https://developers.google.com/slides/api/quickstart/python).
 * Make sure that you have `credentials.json` file downloaded to your local which can be used by the tool to authenticate with google APIs.
 
 Once we have the panels and their inference ready, a user can prepare a slide content mapping configuration file and get their existing presentation template updated. Here is how the mapping file structure looksl like below. [Example](https://github.com/vishnuchalla/yoda/blob/main/config/slide_content_mapping.yaml)
@@ -210,12 +229,4 @@ Slide Number | Slide ID | Slide Data
 1	         |  p1	    | {   "images": {     "p1_i889": "https://image_url"   },   "texts": {     "p1_i887": "\n",     "p1_i888": "\nOpenShift 4.15 Perf/Scale Test Report on ROSA\n OpenShift  Performance and Scale Team \n \n#forum-ocp-perfscale on Slack\n \n\n \n\n",     "p1_i890": "Red Hat Confidential\n"   } }
 --------------------------------------------------------------------------
 2            |  p2	    | {   "images": {     "p1_i889": "https://image_url"   },   "texts": {     "p1_i887": "\n",     "p1_i888": "\nOpenShift 4.15 Perf/Scale Test Report on ROSA\n OpenShift  Performance and Scale Team \n \n#forum-ocp-perfscale on Slack\n \n\n \n\n",     "p1_i890": "Red Hat Confidential\n"   } }
-```
-
-### Default Workflow
-Once we have all the above steps figured out and everything setup correctly as day 1 operations, please execute the below command as the default workflow.
-
-**Note**: This workflow uses the mapping defined in [config](https://github.com/vishnuchalla/yoda/tree/main/config) folder as default ones. Also looks for `credentails.json` in your root directory for google oauth.
-```
-yoda generate --concurrency 100 --presentation '14Sn9jMWjfmqhzUglSZKmFnLSaYDVz4Kaekp0hEAj0Zg' --debug
 ```
