@@ -226,7 +226,7 @@ The output is logged in a tabular format to the console. Can also be exported to
 Slide Number | Slide ID | Slide Data
 --------------------------------------------------------------------------
 --------------------------------------------------------------------------
-1	         |  p1	    | {   "images": {     "p1_i889": "https://image_url"   },   "texts": {     "p1_i887": "\n",     "p1_i888": "\nOpenShift 4.15 Perf/Scale Test Report on ROSA\n OpenShift  Performance and Scale Team \n \n#forum-ocp-perfscale on Slack\n \n\n \n\n",     "p1_i890": "Red Hat Confidential\n"   } }
+1	     |  p1	    | {   "images": {     "p1_i889": "https://image_url"   },   "texts": {     "p1_i887": "\n",     "p1_i888": "\nOpenShift 4.15 Perf/Scale Test Report on ROSA\n OpenShift  Performance and Scale Team \n \n#forum-ocp-perfscale on Slack\n \n\n \n\n",     "p1_i890": "Red Hat Confidential\n"   } }
 --------------------------------------------------------------------------
 2            |  p2	    | {   "images": {     "p1_i889": "https://image_url"   },   "texts": {     "p1_i887": "\n",     "p1_i888": "\nOpenShift 4.15 Perf/Scale Test Report on ROSA\n OpenShift  Performance and Scale Team \n \n#forum-ocp-perfscale on Slack\n \n\n \n\n",     "p1_i890": "Red Hat Confidential\n"   } }
 ```
