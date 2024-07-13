@@ -1,87 +1,89 @@
 slide_info:
-  g2e457098d7b_0_0:
+  g2770f3e6f0f_0_792:
     images:
-      g2e4672f2781_0_13: '../yoda/ingress_perf_panels/panel_91_RPS edge.png'
-      g2e4672f2781_0_14: '../yoda/ingress_perf_panels/panel_98_Average latency usage edge.png'
-  g2e457098d7b_0_9:
+      g2770f3e6f0f_0_797: '../yoda/ingress_perf_panels/panel_91_RPS edge.png'
+      g2770f3e6f0f_0_798: '../yoda/ingress_perf_panels/panel_98_Average latency usage edge.png'
+    # texts:
+    #   g2770f3e6f0f_0_796: 'vchalla test goes here'
+  g2770f3e6f0f_0_801:
     images:
-      g2e457098d7b_0_14: '../yoda/ingress_perf_panels/panel_91_RPS http.png'
-      g2e457098d7b_0_15: '../yoda/ingress_perf_panels/panel_98_Average latency usage http.png'
-  g2e457098d7b_0_18:
+      g2770f3e6f0f_0_806: '../yoda/ingress_perf_panels/panel_91_RPS http.png'
+      g2770f3e6f0f_0_807: '../yoda/ingress_perf_panels/panel_98_Average latency usage http.png'
+  g2770f3e6f0f_0_810:
     images:
-      g2e457098d7b_0_23: '../yoda/ingress_perf_panels/panel_91_RPS passthrough.png'
-      g2e457098d7b_0_24: '../yoda/ingress_perf_panels/panel_98_Average latency usage passthrough.png'
-  g2e457098d7b_0_27:
+      g2770f3e6f0f_0_815: '../yoda/ingress_perf_panels/panel_91_RPS passthrough.png'
+      g2770f3e6f0f_0_816: '../yoda/ingress_perf_panels/panel_98_Average latency usage passthrough.png'
+  g2770f3e6f0f_0_819:
     images:
-      g2e457098d7b_0_32: '../yoda/ingress_perf_panels/panel_91_RPS reencrypt.png'
-      g2e457098d7b_0_33: '../yoda/ingress_perf_panels/panel_98_Average latency usage reencrypt.png'
-  g2e457098d7b_0_226:
+      g2770f3e6f0f_0_824: '../yoda/ingress_perf_panels/panel_91_RPS reencrypt.png'
+      g2770f3e6f0f_0_825: '../yoda/ingress_perf_panels/panel_98_Average latency usage reencrypt.png'
+  g2770f3e6f0f_0_839:
     images:
-      g2e457098d7b_0_231: '../yoda/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 64.png'
-      g2e457098d7b_0_232: '../yoda/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 1024.png'
-  g2e457098d7b_0_235:
+      g2770f3e6f0f_0_844: '../yoda/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 64.png'
+      g2770f3e6f0f_0_845: '../yoda/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 1024.png'
+      g2770f3e6f0f_0_846: '../yoda/k8s_netperf_panels/panel_167_Latency netperf Node to Node TCP 1024.png'
+  g2770f3e6f0f_0_849:
     images:
-      g2e457098d7b_0_240: '../yoda/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 4096.png'
-      g2e457098d7b_0_241: '../yoda/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 8192.png'
-      g2e457098d7b_0_242: '../yoda/k8s_netperf_panels/panel_167_Latency netperf Node to Node TCP 1024.png'
-  g2e457098d7b_0_245:
+      g2770f3e6f0f_0_854: '../yoda/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 4096.png'
+      g2770f3e6f0f_0_855: '../yoda/k8s_netperf_panels/panel_151_Throughput netperf Node to Node TCP 8192.png'
+  g2770f3e6f0f_0_858:
     images:
-      g2e457098d7b_0_250: '../yoda/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 64.png'
-      g2e457098d7b_0_251: '../yoda/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 1024.png'
-  g2e457098d7b_0_254:
+      g2770f3e6f0f_0_863: '../yoda/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 64.png'
+      g2770f3e6f0f_0_864: '../yoda/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 1024.png'
+      g2770f3e6f0f_0_865: '../yoda/k8s_netperf_panels/panel_218_Latency netperf Pod to Pod TCP 1024.png'
+  g2770f3e6f0f_0_868:
     images:
-      g2e457098d7b_0_259: '../yoda/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 4096.png'
-      g2e457098d7b_0_260: '../yoda/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 8192.png'
-      g2e457098d7b_0_261: '../yoda/k8s_netperf_panels/panel_218_Latency netperf Pod to Pod TCP 1024.png'
-  g2e457098d7b_0_264:
+      g2770f3e6f0f_0_873: '../yoda/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 4096.png'
+      g2770f3e6f0f_0_874: '../yoda/k8s_netperf_panels/panel_217_Throughput netperf Pod to Pod TCP 8192.png'
+  g2770f3e6f0f_0_877:
     images:
-      g2e457098d7b_0_269: '../yoda/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 64.png'
-      g2e457098d7b_0_270: '../yoda/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 1024.png'
-  g2e457098d7b_0_273:
+      g2770f3e6f0f_0_882: '../yoda/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 64.png'
+      g2770f3e6f0f_0_883: '../yoda/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 1024.png'
+      g2770f3e6f0f_0_884: '../yoda/k8s_netperf_panels/panel_254_Latency netperf Pod to Pod via Service TCP 1024.png'
+  g2770f3e6f0f_0_887:
     images:
-      g2e457098d7b_0_278: '../yoda/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 4096.png'
-      g2e457098d7b_0_279: '../yoda/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 8192.png'
-      g2e457098d7b_0_280: '../yoda/k8s_netperf_panels/panel_254_Latency netperf Pod to Pod via Service TCP 1024.png'
-  p21:
+      g2770f3e6f0f_0_892: '../yoda/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 4096.png'
+      g2770f3e6f0f_0_893: '../yoda/k8s_netperf_panels/panel_253_Throughput netperf Pod to Pod via Service TCP 8192.png'
+  g2770f3e6f0f_0_907:
     images:
-      p21_i1071: '../yoda/node_density_heavy_panels/panel_536_Average CPU Usage kubelet.png'
-      p21_i1072: '../yoda/node_density_heavy_panels/panel_536_Average CPU Usage crio.png'
-      g2e457098d7b_0_473: '../yoda/node_density_heavy_panels/panel_548_Max RSS Usage kubelet.png'
-      g2e457098d7b_0_474: '../yoda/node_density_heavy_panels/panel_548_Max RSS Usage crio.png'
-  p22:
+      g2770f3e6f0f_0_912: '../yoda/node_density_heavy_panels/panel_536_Average CPU Usage kubelet.png'
+      g2770f3e6f0f_0_913: '../yoda/node_density_heavy_panels/panel_536_Average CPU Usage crio.png'
+      g2770f3e6f0f_0_914: '../yoda/node_density_heavy_panels/panel_548_Max RSS Usage kubelet.png'
+      g2770f3e6f0f_0_915: '../yoda/node_density_heavy_panels/panel_548_Max RSS Usage crio.png'
+  g2770f3e6f0f_0_918:
     images:
-      p22_i1079: '../yoda/node_density_panels/panel_318_P99 Pod Ready latency 120 nodes.png'
-      p22_i1080: '../yoda/node_density_panels/panel_318_P99 Pod Ready latency 249 nodes.png'
-      p22_i1083: '../yoda/node_density_panels/panel_318_P99 Pod Ready latency 24 nodes.png'
-  p23:
+      g2770f3e6f0f_0_921: '../yoda/node_density_panels/panel_318_P99 Pod Ready latency 120 nodes.png'
+      g2770f3e6f0f_0_922: '../yoda/node_density_panels/panel_318_P99 Pod Ready latency 249 nodes.png'
+      g2770f3e6f0f_0_925: '../yoda/node_density_panels/panel_318_P99 Pod Ready latency 24 nodes.png'
+  g2770f3e6f0f_0_928:
     images:
-      p23_i1090: '../yoda/node_density_cni_panels/panel_318_P99 Pod Ready latency 120 nodes.png'
-      p23_i1091: '../yoda/node_density_cni_panels/panel_318_P99 Pod Ready latency 249 nodes.png'
-      p23_i1092: '../yoda/node_density_cni_panels/panel_318_P99 Pod Ready latency 24 nodes.png'
-  p26:
+      g2770f3e6f0f_0_931: '../yoda/node_density_cni_panels/panel_318_P99 Pod Ready latency 120 nodes.png'
+      g2770f3e6f0f_0_932: '../yoda/node_density_cni_panels/panel_318_P99 Pod Ready latency 249 nodes.png'
+      g2770f3e6f0f_0_933: '../yoda/node_density_cni_panels/panel_318_P99 Pod Ready latency 24 nodes.png'
+  g2770f3e6f0f_0_948:
     images:
-      p26_i1113: '../yoda/control_plane_cpu_memory_panels/panel_536_Average CPU Usage kube-apiserver 249 nodes.png'
-      g2e4672f2781_0_1: '../yoda/control_plane_cpu_memory_panels/panel_536_Average CPU Usage kube-controller-manager 249 nodes.png'
-      g2e4672f2781_0_2: '../yoda/control_plane_cpu_memory_panels/panel_608_Max Aggregated RSS Usage kube-apiserver 249 nodes.png'
-      g2e4672f2781_0_3: '../yoda/control_plane_cpu_memory_panels/panel_534_Average CPU Usage etcd 249 nodes.png'
-      g2e4672f2781_0_4: '../yoda/control_plane_cpu_memory_panels/panel_599_Max Aggregated RSS Usage etcd 249 nodes.png'
-      g2e4672f2781_0_5: '../yoda/control_plane_cpu_memory_panels/panel_608_Max Aggregated RSS Usage kube-controller-manager 249 nodes.png'
-  p27:
+      g2770f3e6f0f_0_951: '../yoda/control_plane_cpu_memory_panels/panel_536_Average CPU Usage kube-apiserver 249 nodes.png'
+      g2770f3e6f0f_0_954: '../yoda/control_plane_cpu_memory_panels/panel_536_Average CPU Usage kube-controller-manager 249 nodes.png'
+      g2770f3e6f0f_0_955: '../yoda/control_plane_cpu_memory_panels/panel_608_Max Aggregated RSS Usage kube-apiserver 249 nodes.png'
+      g2770f3e6f0f_0_956: '../yoda/control_plane_cpu_memory_panels/panel_534_Average CPU Usage etcd 249 nodes.png'
+      g2770f3e6f0f_0_957: '../yoda/control_plane_cpu_memory_panels/panel_599_Max Aggregated RSS Usage etcd 249 nodes.png'
+      g2770f3e6f0f_0_958: '../yoda/control_plane_cpu_memory_panels/panel_608_Max Aggregated RSS Usage kube-controller-manager 249 nodes.png'
+  g2770f3e6f0f_0_961:
     images:
-      p27_i1122: '../yoda/node_cpu_memory_panels/panel_537_CPU usage masters 249 nodes.png'
-      p27_i1124: '../yoda/node_cpu_memory_panels/panel_537_CPU usage masters 24 nodes.png'
-      p27_i1126: '../yoda/node_cpu_memory_panels/panel_537_CPU usage masters 120 nodes.png'
-      g2e457098d7b_0_475: '../yoda/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 24 nodes.png'
-      g2e457098d7b_0_476: '../yoda/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 120 nodes.png'
-      g2e457098d7b_0_477: '../yoda/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 249 nodes.png'
-  p28:
+      g2770f3e6f0f_0_964: '../yoda/node_cpu_memory_panels/panel_537_CPU usage masters 249 nodes.png'
+      g2770f3e6f0f_0_966: '../yoda/node_cpu_memory_panels/panel_537_CPU usage masters 24 nodes.png'
+      g2770f3e6f0f_0_968: '../yoda/node_cpu_memory_panels/panel_537_CPU usage masters 120 nodes.png'
+      g2770f3e6f0f_0_969: '../yoda/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 24 nodes.png'
+      g2770f3e6f0f_0_970: '../yoda/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 120 nodes.png'
+      g2770f3e6f0f_0_971: '../yoda/node_cpu_memory_panels/panel_646_Maximum aggregated memory usage masters 249 nodes.png'
+  g2770f3e6f0f_0_974:
     images:
-      p28_i1134: '../yoda/control_plane_latency_panels/panel_636_Read Only API request P99 latency - resource scoped.png'
-      g2e4672f2781_0_6: '../yoda/control_plane_latency_panels/panel_615_Read Only API request P99 latency - namespace scoped.png'
-      g2e4672f2781_0_7: '../yoda/control_plane_latency_panels/panel_614_Read Only API request P99 latency - cluster scoped.png'
-      g2e4672f2781_0_8: '../yoda/control_plane_latency_panels/panel_616_Mutating API request P99 latency.png'
-  p29:
+      g2770f3e6f0f_0_978: '../yoda/control_plane_latency_panels/panel_636_Read Only API request P99 latency - resource scoped.png'
+      g2770f3e6f0f_0_979: '../yoda/control_plane_latency_panels/panel_615_Read Only API request P99 latency - namespace scoped.png'
+      g2770f3e6f0f_0_980: '../yoda/control_plane_latency_panels/panel_614_Read Only API request P99 latency - cluster scoped.png'
+      g2770f3e6f0f_0_981: '../yoda/control_plane_latency_panels/panel_616_Mutating API request P99 latency.png'
+  g2770f3e6f0f_0_984:
     images:
-      p29_i1142: '../yoda/control_plane_latency_panels/panel_540_99th WAL fsync.png'
-      g2e4672f2781_0_9: '../yoda/control_plane_latency_panels/panel_542_99th Backend IO.png'
-      g2e4672f2781_0_10: '../yoda/control_plane_latency_panels/panel_543_99th Roundtrip.png'
+      g2770f3e6f0f_0_988: '../yoda/control_plane_latency_panels/panel_540_99th WAL fsync.png'
+      g2770f3e6f0f_0_990: '../yoda/control_plane_latency_panels/panel_542_99th Backend IO.png'
+      g2770f3e6f0f_0_991: '../yoda/control_plane_latency_panels/panel_543_99th Roundtrip.png'
