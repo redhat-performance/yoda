@@ -3,9 +3,19 @@ from PIL import Image
 from transformers import AutoModel, AutoTokenizer
 import logging
 import torch
+import os
 from torch.cuda.amp import autocast
 
 logger = logging.getLogger(__name__)
+
+# Define cache directory
+CACHE_DIR = "/app/transformers_cache"
+
+# Ensure the cache directory exists
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+# Set environment variable to work in offline mode
+os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
 def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) -> None:
     """
@@ -59,9 +69,9 @@ def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) 
     msgs = [{'role': 'user', 'content': input_prompt}]
 
     try:
-        model = AutoModel.from_pretrained('openbmb/MiniCPM-Llama3-V-2_5', trust_remote_code=True, torch_dtype=torch.float16)
+        model = AutoModel.from_pretrained('openbmb/MiniCPM-Llama3-V-2_5', cache_dir=CACHE_DIR, revision='e978c4c9b177e8d1f36deeec20edb18377dc2ff7', trust_remote_code=True, torch_dtype=torch.float16)
         model = model.to(device='cuda')
-        tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-Llama3-V-2_5', trust_remote_code=True)
+        tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-Llama3-V-2_5', cache_dir=CACHE_DIR, revision='e978c4c9b177e8d1f36deeec20edb18377dc2ff7', trust_remote_code=True)
         model.eval()
 
         # Use autocast for mixed precision to save memory
