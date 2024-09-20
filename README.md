@@ -4,8 +4,11 @@ Tool to automate release readouts generation for OCP performance testing. Also i
 ## **Prerequisites**
 
 * Grafana login
+* Use a Personal(non Red Hat Org) account due to company security restriction, we are not allowed to make certain objects public, 
+this script uploads some screenshots to your drive and make it public to be referred(hyperlinked) within slides.
 * Create a project in your own google account using console. And make a note of the credentials that have access to goole drive and slides APIs.
 More details [here](https://developers.google.com/slides/api/quickstart/python).
+* Publish the App to make it external so script can have full access to write and read information to drive
 * Google slides and drive credentials with temporary external access (i.e use your own account). This is required only if you need to update your existing slides.
 
 ## **Build & Install**
