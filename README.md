@@ -4,8 +4,11 @@ Tool to automate release readouts generation for OCP performance testing. Also i
 ## **Prerequisites**
 
 * Grafana login
+* Use a Personal(non Red Hat Org) account due to company security restriction, we are not allowed to make documents or files as public, 
+this script uploads report screenshots to your drive and make it public to be referred(hyperlinked) within slides.
 * Create a project in your own google account using console. And make a note of the credentials that have access to goole drive and slides APIs.
 More details [here](https://developers.google.com/slides/api/quickstart/python).
+* Publish the App to make it external so script can have full access to write and read information to drive
 * Google slides and drive credentials with temporary external access (i.e use your own account). This is required only if you need to update your existing slides.
 
 ## **Build & Install**
@@ -126,6 +129,7 @@ Based on this information a user should be able to prepare their config with a l
 The above command now triggers 75% of active cpu core threads to execute its tasks.
 
 ## Local Inference
+Inference is totally optional to prepare a summary of the results, manual scrutiny is MUST to validate the statements.
 
 ## **Pre-requisites**
 [Hugging Face](https://huggingface.co/) Account. This is used to use an huggingface token to download models locally. Once you obtain the [Hugging Face Token](https://www.youtube.com/watch?v=Br7AcznvzSA) for your account, Please do export it
