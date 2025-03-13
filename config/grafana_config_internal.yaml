@@ -1,0 +1,456 @@
+grafana :
+  - alias: 'perfscale internal grafana'
+    url: 'http://your-grafana.com:3000/'
+    username: 'XXXX'
+    password: 'YYYY'
+ 
+    dashboards:
+  # Ingress Panels
+    - alias: 'ingress-perf edge'
+      raw_url: 'http://your-grafana.com:3000/d/cebaf274-41f3-4db1-8fdb-cbbefa5d7591/ingress-perf?orgId=1&from=1733039044206&to=1735631044207&var-Datasource=c1f915f4-afc5-4207-bb26-6c6ea42670b2&var-platform=AWS&var-clusterType=self-managed&var-workerNodesCount=9&var-infraNodesType=c5.4xlarge&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=7578022a-aed5-47bc-aa4e-0ecd5bde559e&var-uuid=8a09950d-c1c5-4419-b40a-74999fbf26cb&var-uuid=b79453ba-4ec4-4cdb-b81c-ae67fd8c0b21&var-uuid=bd575840-f3fc-4871-aa53-cef396750ea7&var-uuid=e9d0c651-ac07-4741-bd42-428cf12a315b&var-uuid=fa5002e5-01d0-4dac-ac57-7695adbfa254&var-termination=edge&var-latency_metric=avg_lat_us&var-compare_by=ocpMajorVersion.keyword&var-all_uuids=All'
+      output: 'ingress_perf_panels'
+      panels:
+        - alias: 'RPS edge'
+          id: 9
+          name: 'RPS edge'
+          height: 244
+          width: 1153
+          context: 'RPS metric for edge termination'
+        - alias: 'Average latency usage edge'
+          id: 10
+          name: 'avg_lat_us edge'
+          height: 252
+          width: 1153
+          context: 'Average latency usage for edge termination'
+ 
+    - alias: 'ingress-perf http'
+      raw_url: 'http://your-grafana.com:3000/d/cebaf274-41f3-4db1-8fdb-cbbefa5d7591/ingress-perf?orgId=1&from=1733039044206&to=1735631044207&var-Datasource=c1f915f4-afc5-4207-bb26-6c6ea42670b2&var-platform=AWS&var-clusterType=self-managed&var-workerNodesCount=9&var-infraNodesType=c5.4xlarge&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=7578022a-aed5-47bc-aa4e-0ecd5bde559e&var-uuid=8a09950d-c1c5-4419-b40a-74999fbf26cb&var-uuid=b79453ba-4ec4-4cdb-b81c-ae67fd8c0b21&var-uuid=bd575840-f3fc-4871-aa53-cef396750ea7&var-uuid=e9d0c651-ac07-4741-bd42-428cf12a315b&var-uuid=fa5002e5-01d0-4dac-ac57-7695adbfa254&var-termination=http&var-latency_metric=avg_lat_us&var-=&var-compare_by=ocpMajorVersion.keyword&var-all_uuids=All'
+      output: 'ingress_perf_panels'
+      panels:
+        - alias: 'RPS http'
+          id: 9
+          name: 'RPS http'
+          height: 245
+          width: 1153
+          context: 'RPS metric for http termination'
+        - alias: 'Average latency usage http'
+          id: 10
+          name: 'avg_lat_us http'
+          height: 252
+          width: 1153
+          context: 'Average latency usage for http termination'
+ 
+    - alias: 'ingress-perf passthrough'
+      raw_url: 'http://your-grafana.com:3000/d/cebaf274-41f3-4db1-8fdb-cbbefa5d7591/ingress-perf?orgId=1&from=1733039044206&to=1735631044207&var-Datasource=c1f915f4-afc5-4207-bb26-6c6ea42670b2&var-platform=AWS&var-clusterType=self-managed&var-workerNodesCount=9&var-infraNodesType=c5.4xlarge&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=7578022a-aed5-47bc-aa4e-0ecd5bde559e&var-uuid=8a09950d-c1c5-4419-b40a-74999fbf26cb&var-uuid=b79453ba-4ec4-4cdb-b81c-ae67fd8c0b21&var-uuid=bd575840-f3fc-4871-aa53-cef396750ea7&var-uuid=e9d0c651-ac07-4741-bd42-428cf12a315b&var-uuid=fa5002e5-01d0-4dac-ac57-7695adbfa254&var-termination=passthrough&var-latency_metric=avg_lat_us&var-=&var-compare_by=ocpMajorVersion.keyword&var-all_uuids=All'
+      output: 'ingress_perf_panels'
+      panels:
+        - alias: 'RPS passthrough'
+          id: 9
+          name: 'RPS passthrough'
+          height: 253
+          width: 1153
+          context: 'RPS metric for passthrough termination'
+        - alias: 'Average latency usage passthrough'
+          id: 10
+          name: 'avg_lat_us passthrough'
+          height: 243
+          width: 1153
+          context: 'Average latency usage for passthrough termination'
+ 
+    - alias: 'ingress-perf reencrypt'
+      raw_url: 'http://your-grafana.com:3000/d/cebaf274-41f3-4db1-8fdb-cbbefa5d7591/ingress-perf?orgId=1&from=1733039044206&to=1735631044207&var-Datasource=c1f915f4-afc5-4207-bb26-6c6ea42670b2&var-platform=AWS&var-clusterType=self-managed&var-workerNodesCount=9&var-infraNodesType=c5.4xlarge&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=7578022a-aed5-47bc-aa4e-0ecd5bde559e&var-uuid=8a09950d-c1c5-4419-b40a-74999fbf26cb&var-uuid=b79453ba-4ec4-4cdb-b81c-ae67fd8c0b21&var-uuid=bd575840-f3fc-4871-aa53-cef396750ea7&var-uuid=e9d0c651-ac07-4741-bd42-428cf12a315b&var-uuid=fa5002e5-01d0-4dac-ac57-7695adbfa254&var-termination=reencrypt&var-latency_metric=avg_lat_us&var-=&var-compare_by=ocpMajorVersion.keyword&var-all_uuids=All'
+      output: 'ingress_perf_panels'
+      panels:
+        - alias: 'RPS reencrypt'
+          id: 9
+          name: 'RPS reencrypt'
+          height: 253
+          width: 1153
+          context: 'RPS metric for reencrypt termination'
+        - alias: 'Average latency usage reencrypt'
+          id: 10
+          name: 'avg_lat_us reencrypt'
+          height: 246
+          width: 1153
+          context: 'Average latency usage for reencrypt termination'
+
+  # k8s-netperf
+    - alias: 'k8s-netperf Node to Node TCP 64 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=64&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Node to Node TCP 64'
+          id: 11
+          height: 273
+          width: 578
+          context: 'k8s-netperf throughput for Node to Node TCP 64 packet size'
+
+    - alias: 'k8s-netperf Node to Node TCP 1024 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=1024&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Node to Node TCP 1024'
+          id: 11
+          height: 260
+          width: 578
+          context: 'k8s-netperf throughput for Node to Node TCP 1024 packet size'
+        - alias: 'Latency netperf Node to Node TCP 1024'
+          id: 12
+          height: 255
+          width: 561
+          context: 'k8s-netperf latency for Node to Node TCP 1024 packet size'
+
+    - alias: 'k8s-netperf Node to Node TCP 4096 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=4096&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Node to Node TCP 4096'
+          id: 11
+          height: 284
+          width: 577
+          context: 'k8s-netperf throughput for Node to Node TCP 4096 packet size'
+
+    - alias: 'k8s-netperf Node to Node TCP 8192 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=8192&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Node to Node TCP 8192'
+          id: 11
+          height: 256
+          width: 577
+          context: 'k8s-netperf throughput for Node to Node TCP 8192 packet size'
+
+    - alias: 'k8s-netperf Pod to Pod TCP 64 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=64&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Pod to Pod TCP 64'
+          id: 14
+          height: 271
+          width: 577
+          context: 'k8s-netperf throughput for Pod to Pod TCP 64 packet size'
+
+    - alias: 'k8s-netperf Pod to Pod TCP 1024 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=1024&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Pod to Pod TCP 1024'
+          id: 14
+          height: 282
+          width: 577
+          context: 'k8s-netperf throughput for Pod to Pod TCP 1024 packet size'
+        - alias: 'Latency netperf Pod to Pod TCP 1024'
+          id: 15
+          height: 264
+          width: 563
+          context: 'k8s-netperf latency for Pod to Pod TCP 1024 packet size'
+ 
+    - alias: 'k8s-netperf Pod to Pod TCP 4096 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=4096&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Pod to Pod TCP 4096'
+          id: 14
+          height: 264
+          width: 574
+          context: 'k8s-netperf throughput for Pod to Pod TCP 4096 packet size'
+ 
+    - alias: 'k8s-netperf Pod to Pod TCP 8192 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=8192&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Pod to Pod TCP 8192'
+          id: 14
+          height: 264
+          width: 574
+          context: 'k8s-netperf throughput for Pod to Pod TCP 8192 packet size'
+
+    - alias: 'k8s-netperf Pod to Pod via Service TCP 64 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=64&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Pod to Pod via Service TCP 64'
+          id: 17
+          height: 267
+          width: 578
+          context: 'k8s-netperf throughput for Pod to Pod via Service TCP 64 packet size'
+
+    - alias: 'k8s-netperf Pod to Pod via Service TCP 1024 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=1024&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Pod to Pod via Service TCP 1024'
+          id: 17
+          height: 291
+          width: 578
+          context: 'k8s-netperf throughput for Pod to Pod via Service TCP 1024 packet size'
+        - alias: 'Latency netperf Pod to Pod via Service TCP 1024'
+          id: 18
+          height: 280
+          width: 565
+          context: 'k8s-netperf latency for Pod to Pod via Service TCP 1024 packet size'
+
+    - alias: 'k8s-netperf Pod to Pod via Service TCP 4096 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=4096&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Pod to Pod via Service TCP 4096'
+          id: 17
+          height: 264
+          width: 576
+          context: 'k8s-netperf throughput for Pod to Pod via Service TCP 4096 packet size'
+
+    - alias: 'k8s-netperf Pod to Pod via Service TCP 8192 packet size'
+      raw_url: 'http://your-grafana.com:3000/d/fa880f35-da31-46bd-b1c8-73fe103fb3d3/k8s-netperf?orgId=1&from=1732986626550&to=1735578626550&var-datasource=d976749f-9104-4295-97a0-e5faec4a1eb9&var-platform=AWS&var-workerNodesType=m5.2xlarge&var-uuid=07703530-7f70-4ae1-9c67-ae9945a94e94&var-uuid=0c1aa460-8671-437f-8a72-7724e7b0e9b8&var-uuid=325a7873-c43d-4079-a63c-505d71a28cc0&var-uuid=3ec92d1f-84f4-44a5-a45c-980bab566b47&var-uuid=461dde03-aa18-454d-a315-e2925f62118e&var-uuid=5151c962-3e3a-41e5-9438-4d0fe18ef574&var-uuid=53278566-b8b2-4a8e-bc9d-51f69382c55c&var-uuid=5d08684d-e016-43ef-98e4-80a7bfbbb503&var-uuid=63ade479-94e2-44ea-9ace-bbf7c3c20032&var-uuid=711f0fe6-8c63-454f-bb3e-6519ddbaec00&var-uuid=759cd8d0-4176-4541-a0ca-79ef75e86dfc&var-uuid=7837eb59-03c8-4df5-b01e-5ef10555485e&var-uuid=8b4f3908-d83a-4576-bfb9-201c951e1918&var-uuid=ade12133-409b-48ec-bb7c-1fd69e412704&var-uuid=c2d04d8a-f726-4934-9232-42da620c2958&var-hostNetwork=true&var-hostNetwork=false&var-service=true&var-parallelism=All&var-throughput_profile=All&var-latency_profile=All&var-messageSize=8192&var-driver=netperf&var-compare_by=metadata.ocpShortVersion.keyword'
+      output: 'k8s_netperf_panels'
+      panels:
+        - alias: 'Throughput netperf Pod to Pod via Service TCP 8192'
+          id: 17
+          height: 280
+          width: 576
+          context: 'k8s-netperf throughput for Pod to Pod via Service TCP 8192 packet size'
+
+  # node-density-heavy
+    - alias: 'kube-burner ocp node-density-heavy crio metrics'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1733047628169&to=1735639628169&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=self-managed&var-job=node-density-heavy&var-workerNodesCount=24&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-compare_by=uuid&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra&var-component=crio&var-uuid=9a869af9-8c12-4d89-8e6d-fe6f999be8ec&var-uuid=28e38326-2482-43b9-8f92-440798244384'
+      output: 'node_density_heavy_panels'
+      panels:
+        - alias: 'Average CPU Usage crio'
+          id: 37
+          height: 150
+          width: 785
+          context: 'Average CPU Usage for crio in node-density-heavy 24 nodes test'
+        - alias: 'Max RSS Usage crio'
+          id: 36
+          height: 150
+          width: 785
+          context: 'Max RSS Usage for crio in node-density-heavy 24 nodes test'
+ 
+    - alias: 'kube-burner ocp node-density-heavy kubelet metrics'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1733047693540&to=1735639693540&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=self-managed&var-job=node-density-heavy&var-workerNodesCount=24&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-compare_by=uuid&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra&var-component=kubelet&var-uuid=9a869af9-8c12-4d89-8e6d-fe6f999be8ec&var-uuid=28e38326-2482-43b9-8f92-440798244384'
+      output: 'node_density_heavy_panels'
+      panels:
+        - alias: 'Average CPU Usage kubelet'
+          id: 37
+          height: 150
+          width: 785
+          context: 'Average CPU Usage for kubelet in node-density-heavy 24 nodes test'
+        - alias: 'Max RSS Usage kubelet'
+          id: 36
+          height: 150
+          width: 778
+          context: 'Max RSS Usage for kubelet in node-density-heavy 24 nodes test'
+
+  # node-density-cni
+    - alias: 'kube-burner ocp node-density-cni podready latency 24 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735550110144&to=1735636510144&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=node-density-cni&var-workerNodesCount=24&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=9a85db0e-3b8f-4e50-95d4-a3161d1f8219&var-uuid=190ae926-d04e-4152-9d9b-a7341ced794d&var-compare_by=uuid&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra'
+      output: 'node_density_cni_panels'
+      panels:
+        - alias: 'P99 Pod Ready latency 24 nodes'
+          id: 11
+          height: 185
+          width: 591
+          context: 'Pod Ready Latency for node-density-cni 24 nodes test'
+
+    - alias: 'kube-burner ocp node-density-cni podready latency 120 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735550110144&to=1735636510144&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=node-density-cni&var-workerNodesCount=120&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=02c59b7c-a1a5-4ca0-bf93-058e6ace523d&var-uuid=13c42dec-5944-49e2-aea1-6ea0f0c10015&var-compare_by=uuid&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra&var-component=crio'
+      output: 'node_density_cni_panels'
+      panels:
+        - alias: 'P99 Pod Ready latency 120 nodes'
+          id: 11
+          height: 185
+          width: 583
+          context: 'Pod Ready Latency for node-density-cni 120 nodes test'
+
+    - alias: 'kube-burner ocp node-density-cni podready latency 249 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735550110144&to=1735636510144&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=node-density-cni&var-workerNodesCount=249&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=68647456-7330-45fd-8e71-ac30ffca0026&var-uuid=a68bec06-720d-455c-b785-6977a43a17f4&var-compare_by=uuid&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra&var-component=crio'
+      output: 'node_density_cni_panels'
+      panels:
+        - alias: 'P99 Pod Ready latency 249 nodes'
+          id: 11
+          height: 175
+          width: 567
+          context: 'Pod Ready Latency for node-density-cni 249 nodes test'
+
+  # cluster-density-v2
+    - alias: 'kube-apiserver cpu/memory usage 249 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888110&to=1736150688110&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=cluster-density-v2&var-workerNodesCount=249&var-ocpMajorVersion=4.18&var-ocpMajorVersion=4.17&var-uuid=286a458f-f24c-4f43-9a7e-d88512f61ecc&var-uuid=2b6df990-d729-4d5e-a674-3ed568f4e7b7&var-compare_by=uuid&var-component=kube-apiserver&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra'
+      output: 'control_plane_cpu_memory_panels'
+      panels:
+        - alias: 'Average CPU Usage kube-apiserver 249 nodes'
+          id: 37
+          height: 150
+          width: 500
+          context: 'Average kube-apiserver cpu usage for a 249 nodes cluster'
+        - alias: 'Max Aggregated RSS Usage kube-apiserver 249 nodes'
+          id: 35
+          height: 150
+          width: 500
+          context: 'Maximum kube-apiserver aggregated RSS usage for a 249 nodes cluster'
+
+  # kube-controller-manager cpu/memory 
+    - alias: 'kube-controller-manager cpu/memory usage 249 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888110&to=1736150688110&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=cluster-density-v2&var-workerNodesCount=249&var-ocpMajorVersion=4.18&var-ocpMajorVersion=4.17&var-uuid=2b6df990-d729-4d5e-a674-3ed568f4e7b7&var-uuid=286a458f-f24c-4f43-9a7e-d88512f61ecc&var-compare_by=uuid&var-component=kube-controller-manager&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra'
+      output: 'control_plane_cpu_memory_panels'
+      panels:
+        - alias: 'Average CPU Usage kube-controller-manager 249 nodes'
+          id: 37
+          height: 150
+          width: 500
+          context: 'Average kube-controller-manager cpu usage for a 249 nodes cluster'
+        - alias: 'Max Aggregated RSS Usage kube-controller-manager 249 nodes'
+          id: 35
+          height: 150
+          width: 500
+          context: 'Maximum kube-controller-manager aggregated RSS usage for a 249 nodes cluster'
+
+  # etcd cpu/memoy
+    - alias: 'etcd cpu/memory usage 249 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888110&to=1736150688110&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=cluster-density-v2&var-workerNodesCount=249&var-ocpMajorVersion=4.18&var-ocpMajorVersion=4.17&var-uuid=2b6df990-d729-4d5e-a674-3ed568f4e7b7&var-uuid=286a458f-f24c-4f43-9a7e-d88512f61ecc&var-compare_by=uuid&var-component=etcd&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra'
+      output: 'control_plane_cpu_memory_panels'
+      panels:
+        - alias: 'Average CPU Usage etcd 249 nodes'
+          id: 37
+          height: 150
+          width: 551
+          context: 'Average etcd cpu usage for a 249 nodes cluster'
+        - alias: 'Max Aggregated RSS Usage etcd 249 nodes'
+          id: 35
+          height: 150
+          width: 554
+          context: 'Maximum etcd aggregated RSS usage for a 249 nodes cluster'
+
+  # CPU Usuage Master
+    - alias: '249 node - CPU usage masters'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888110&to=1736150688110&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=cluster-density-v2&var-workerNodesCount=249&var-ocpMajorVersion=4.18&var-ocpMajorVersion=4.17&var-uuid=2b6df990-d729-4d5e-a674-3ed568f4e7b7&var-uuid=286a458f-f24c-4f43-9a7e-d88512f61ecc&var-compare_by=uuid&var-component=crio&var-node_roles=masters'
+      output: 'node_cpu_memory_panels'
+      panels:
+        - alias: 'CPU usage masters 249 nodes'
+          id: 4
+          height: 115
+          width: 563
+          context: 'CPU usage for master nodes'
+        - alias: 'Maximum aggregated memory usage masters 249 nodes'
+          id: 7
+          height: 115
+          width: 563
+          context: 'Maximum aggregated memory usage for master nodes'
+
+    - alias: '24 node - CPU usage masters'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735062218027&to=1737654218027&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=self-managed&var-job=cluster-density-v2&var-workerNodesCount=24&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-compare_by=uuid&var-component=crio&var-node_roles=masters&var-uuid=25f2b8b2-3b66-4eba-97a2-56dc7ed30798&var-uuid=055aeea6-7aa1-4ca4-8a71-1677690d132e'
+      output: 'node_cpu_memory_panels'
+      panels:
+        - alias: 'CPU usage masters 24 nodes'
+          id: 4
+          height: 130
+          width: 563
+          context: 'CPU usage for master nodes'
+        - alias: 'Maximum aggregated memory usage masters 24 nodes'
+          id: 7
+          height: 130
+          width: 562
+          context: 'Maximum aggregated memory usage for master nodes'
+
+    - alias: '120 node - CPU usage masters'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735062218027&to=1737654218027&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=self-managed&var-job=cluster-density-v2&var-workerNodesCount=120&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-compare_by=uuid&var-component=crio&var-node_roles=masters&var-uuid=cc296f7c-c697-4a6c-9171-31e49a888cc4&var-uuid=76eea64a-4047-42a2-9621-5529e8aee414'
+      output: 'node_cpu_memory_panels'
+      panels:
+        - alias: 'CPU usage masters 120 nodes'
+          id: 4
+          height: 124
+          width: 563
+          context: 'CPU usage for master nodes'
+        - alias: 'Maximum aggregated memory usage masters 120 nodes'
+          id: 7
+          height: 124
+          width: 562
+          context: 'Maximum aggregated memory usage for master nodes'
+  # kube-apiserver Latency
+    - alias: 'kube-apiserver request latency - 249 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888110&to=1736150688110&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=cluster-density-v2&var-workerNodesCount=249&var-ocpMajorVersion=4.18&var-ocpMajorVersion=4.17&var-uuid=2b6df990-d729-4d5e-a674-3ed568f4e7b7&var-uuid=286a458f-f24c-4f43-9a7e-d88512f61ecc&var-compare_by=uuid&var-component=crio&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra'
+      output: 'control_plane_latency_panels'
+      panels:
+        - alias: 'Read Only API request P99 latency - resource scoped'
+          id: 14
+          height: 164
+          width: 590
+          context: 'Read Only API request P99 latency at resource scope'
+        - alias: 'Read Only API request P99 latency - namespace scoped'
+          id: 16
+          height: 164
+          width: 590
+          context: 'Read Only API request P99 latency at namespace scope'
+        - alias: 'Read Only API request P99 latency - cluster scoped'
+          id: 18
+          height: 164
+          width: 590
+          context: 'Read Only API request P99 latency at cluster scope'
+        - alias: 'Mutating API request P99 latency'
+          id: 20
+          height: 164
+          width: 588
+          context: 'Mutating API request P99 latency'
+
+  # etcd latency
+    - alias: 'etcd latency - 249 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888110&to=1736150688110&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=cluster-density-v2&var-workerNodesCount=249&var-ocpMajorVersion=4.18&var-ocpMajorVersion=4.17&var-uuid=2b6df990-d729-4d5e-a674-3ed568f4e7b7&var-uuid=286a458f-f24c-4f43-9a7e-d88512f61ecc&var-compare_by=uuid&var-component=crio&var-node_roles=masters&var-node_roles=workers&var-node_roles=infra'
+      output: 'control_plane_latency_panels'
+      panels:
+        - alias: '99th WAL fsync'
+          id: 23
+          height: 160
+          width: 634
+          context: '99th wal etcd fsync latency'
+        - alias: '99th Backend IO'
+          id: 27
+          height: 168
+          width: 634
+          context: '99th etcd backend IO latency'
+        - alias: '99th Roundtrip'
+          id: 25
+          height: 160
+          width: 643
+          context: '99th etcd roundtrip latency'
+
+
+  # node-density
+    - alias: 'kube-burner ocp node-density podready latency 24 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888110&to=1736150688110&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=node-density&var-workerNodesCount=24&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=13dcc414-4e34-40ec-8a47-8149ad78036e&var-uuid=3edbdbd6-63ef-4bdb-9502-1d55a2b6e2c1&var-compare_by=uuid&var-component=crio&var-node_roles=masters'
+      output: 'node_density_panels'
+      panels:
+        - alias: 'P99 Pod Ready latency 24 nodes'
+          id: 11
+          height: 179
+          width: 536
+          context: 'Pod Ready Latency for node-density 24 nodes test'
+
+    - alias: 'kube-burner ocp node-density podready latency 120 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888110&to=1736150688110&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=node-density&var-workerNodesCount=120&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=16196ed4-843e-4c42-8a37-4f27537ce694&var-uuid=d238ab51-b83f-48b1-956d-7cc65b86a48f&var-compare_by=uuid&var-component=crio&var-node_roles=masters'
+      output: 'node_density_panels'
+      panels:
+        - alias: 'P99 Pod Ready latency 120 nodes'
+          id: 11
+          height: 179
+          width: 536
+          context: 'Pod Ready Latency for node-density 120 nodes test'
+
+    - alias: 'kube-burner ocp node-density podready latency 249 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1735545888000&to=1737101088000&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=node-density&var-workerNodesCount=249&var-ocpMajorVersion=4.17&var-ocpMajorVersion=4.18&var-uuid=a94a2b69-9374-4dfb-8839-441f469dcb78&var-uuid=1062e309-cc87-4470-9ad2-5c6f361f28a6&var-compare_by=uuid&var-component=crio&var-node_roles=masters'
+      output: 'node_density_panels'
+      panels:
+        - alias: 'P99 Pod Ready latency 249 nodes'
+          id: 11
+          height: 203
+          width: 601
+          context: 'Pod Ready Latency for node-density 249 nodes test'
+
+  # UDN
+    - alias: 'kube-burner ocp udn-density-pods podready latency 24 nodes'
+      raw_url: 'http://your-grafana.com:3000/d/bbb21e10-0118-4ac0-a198-7daaa4bfbf01/kube-burner-report-mode?orgId=1&from=1736467200000&to=1737676799000&var-Datasource=aa17206f-b0de-4e6d-930f-50793aba9efd&var-platform=AWS&var-sdn=OVNKubernetes&var-clusterType=All&var-job=udn-density-pods&var-workerNodesCount=24&var-ocpMajorVersion=4.18&var-uuid=5bf3de32-4426-4481-8450-00320c285971&var-uuid=ddf4ea1d-beb9-4968-9e0e-00d53da235bf&var-compare_by=uuid&var-component=crio&var-node_roles=masters'
+      output: 'udn_density_panels'
+      panels:
+        - alias: 'P99 Pod Ready latency 24 nodes'
+          id: 11
+          height: 203
+          width: 601
+          context: 'Pod Ready Latency for udn-density-pods 24 nodes test' 

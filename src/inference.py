@@ -9,7 +9,7 @@ from torch.cuda.amp import autocast
 logger = logging.getLogger(__name__)
 
 # Define cache directory
-CACHE_DIR = "/app/transformers_cache"
+CACHE_DIR = "/tmp/app/transformers_cache"
 
 # Ensure the cache directory exists
 os.makedirs(CACHE_DIR, exist_ok=True)
