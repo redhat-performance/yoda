@@ -2,7 +2,7 @@
 Tool to automate release readouts generation for OCP performance testing. Also implementation is decoupled in such a way that it can be used for any readout generation.
 
 ## **Prerequisites**
-
+* Python 3.12
 * Grafana login
 * Use a Personal(non Red Hat Org) account due to company security restriction, we are not allowed to make documents or files as public, 
 this script uploads report screenshots to your drive and make it public to be referred(hyperlinked) within slides.
@@ -22,12 +22,41 @@ Please follow the below steps for installation.
 >> pip install .
 ```
 
+## **Containerized Build & Install**
+If building from scratch, execute the below command.
+```
+podman build -f Dockerfile -t=<your-registry>/<repo>/yoda:latest .
+```
+Once you have your image built either in remote regristry or local, execute a container by mounting google auth token.
+```
+podman run --rm -it -v $(pwd)/token.json:/tmp/app/token.json:Z <your-registry>/<repo>/yoda:latest /bin/sh
+sh-5.2# ls
+LICENSE  README.md  build  config  main.py  requirements.txt  setup.py	src  utils  venv  vqa-app  yoda.egg-info
+sh-5.2# pwd
+/home/yoda
+sh-5.2# source venv/bin/activate
+(venv) sh-5.2# yoda --help
+Usage: yoda [OPTIONS] COMMAND [ARGS]...
+
+  yoda is the cli tool to auto generate readouts.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  generate              sub-command to generate a grafana panels and...
+  preview-dashboard     sub-command to preview a grafana dashboard.
+  preview-presentation  sub-command to preview a presentation.
+  update-presentation   sub-command to update a presentation. 
+```
+**Note**: Please make sure that you have your google `token.json` already generated using [preview-presentation](https://github.com/redhat-performance/yoda?tab=readme-ov-file#preview-dashboard-sub-command) subcommand in your local before going with the containerized execution of yoda. Otherwise you might run into browser redirection issues while interacting with google slides because it isn't supported by any container.
+
 ## **Usage**
 
 ### Default Workflow
 Once we have all the above steps figured out and everything setup correctly as day 1 operations, please execute the below command as the default workflow.
 
-**Note**: This workflow uses the mapping defined in [config](https://github.com/vishnuchalla/yoda/tree/main/config) folder as default ones. Also looks for `credentails.json` in your root directory for google oauth.
+**Note**: This workflow uses the mapping defined in [config](https://github.com/redhat-performance/yoda/tree/main/config) folder as default ones. Also looks for `credentails.json` in your root directory for google oauth.
 ```
 yoda generate --concurrency 100 --presentation '14Sn9jMWjfmqhzUglSZKmFnLSaYDVz4Kaekp0hEAj0Zg' --debug
 ```
@@ -56,7 +85,7 @@ Here is a simple example to trigger this command
 >> yoda generate --config config.yaml
 ```
 
-And the config.yaml follows the below YAML structure. [Example](https://github.com/vishnuchalla/yoda/blob/main/config/grafana_config.yaml)
+And the config.yaml follows the below YAML structure. [Example](https://github.com/redhat-performance/yoda/blob/main/config/grafana_config.yaml)
 ```
 grafana :
   - alias: 'perfscale dev grafana'
@@ -156,7 +185,7 @@ We also have `--inference` as an optional flag that can be enabled while you exe
 ```
 >> yoda generate --config config.yaml --concurrency --debug --inference
 ```
-At present, we are using [openbmb/MiniCPM-Llama3-V-2_5](https://huggingface.co/openbmb/MiniCPM-Llama3-V-2_5) as our inference endpoint [hosted on an AI cluster](https://github.com/vishnuchalla/yoda/tree/main/vqa-app#readme) to summarize the image. Here is how the output of updated panel data looks like after the inference.
+At present, we are using [openbmb/MiniCPM-Llama3-V-2_5](https://huggingface.co/openbmb/MiniCPM-Llama3-V-2_5) as our inference endpoint [hosted on an AI cluster](https://github.com/redhat-performance/yoda/tree/main/vqa-app#readme) to summarize the image. Here is how the output of updated panel data looks like after the inference.
 
 #### **Output**
 ```
@@ -171,7 +200,7 @@ At the end `yoda generate` sub-command spits out a csv file called `panel_infere
 * We need to have an already existing slide template prepared. For rosa testing please use this [template](https://docs.google.com/presentation/d/1DKDv2PTaRywqYLHXK7g1NPHxHz9Sn0sX/edit#slide=id.p1). Make a copy of it and note down the `Presentation ID`.
 * Make sure that you have `credentials.json` file downloaded to your local which can be used by the tool to authenticate with google APIs.
 
-Once we have the panels and their inference ready, a user can prepare a slide content mapping configuration file and get their existing presentation template updated. Here is how the mapping file structure looksl like below. [Example](https://github.com/vishnuchalla/yoda/blob/main/config/slide_content_mapping.yaml)
+Once we have the panels and their inference ready, a user can prepare a slide content mapping configuration file and get their existing presentation template updated. Here is how the mapping file structure looksl like below. [Example](https://github.com/redhat-performance/yoda/blob/main/config/slide_content_mapping.yaml)
 
 ```
 slide_info:
