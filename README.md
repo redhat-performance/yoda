@@ -63,22 +63,25 @@ yoda generate --concurrency 100 --presentation '14Sn9jMWjfmqhzUglSZKmFnLSaYDVz4K
 
 ### [generate] sub-command
 ```
-yoda generate --help
 Usage: yoda generate [OPTIONS]
 
-  sub-command to extract grafana panels and infer them. Optionally executes the default worklfow to publish those results to a presentation.
+  sub-command to generate a grafana panels and infer them. Optionally executes
+  the default worklfow to publish those results to a presentation.
 
 Options:
-  --config TEXT          Path to the configuration file
-  --debug                log level
-  --concurrency          Flag to enable concurrency
-  --deplot               Flag for deplotting the image
-  --inference            Flag for inference
-  --csv TEXT             .csv file path to output
-  --presentation TEXT    Presentation id to parse
-  --credentials TEXT     Google oauth credentials path
-  --slidemapping TEXT    Slide content mapping file
-  --help                 Show this message and exit.
+  --config TEXT                Path to the configuration file
+  --debug                      log level
+  --concurrency                To enable concurrent operations
+  --inference                  Flag for inference
+  --inference-endpoint TEXT    Inference endpoint
+  --inference-api-key TEXT     Api key to access inference endpoint
+  --inference-model TEXT       Hosted model at the inference endpoint
+  --inference-model-type TEXT  Hosted model type for inference
+  --csv TEXT                   .csv file path to output
+  --presentation TEXT          Presentation id to parse
+  --credentials TEXT           Google oauth credentials path
+  --slidemapping TEXT          Slide content mapping file
+  --help                       Show this message and exit.
 ```
 Here is a simple example to trigger this command
 ```
@@ -157,43 +160,93 @@ Based on this information a user should be able to prepare their config with a l
 ```
 The above command now triggers 75% of active cpu core threads to execute its tasks.
 
-## Local Inference
-Inference is totally optional to prepare a summary of the results, manual scrutiny is MUST to validate the statements.
+## Inference
 
-## **Pre-requisites**
-[Hugging Face](https://huggingface.co/) Account. This is used to use an huggingface token to download models locally. Once you obtain the [Hugging Face Token](https://www.youtube.com/watch?v=Br7AcznvzSA) for your account, Please do export it
-```
-export HF_TOKEN=<YOUR_TOKEN>
-```
-
-### **Deplot**
- We have `--deplot` as an optional flag that can be enabled while you execute `yoda generate` sub-command. Example usage
-```
->> yoda generate --config config.yaml --concurrency --debug --deplot
-```
-At present, we are using [google/deplot](https://huggingface.co/google/deplot) as our deplot endpoint. Here is how the output of updated panel data looks like after the deplot.
-
-#### **Output**
-```
-'TITLE | RPS edge| RPS edge\n4.14 | 43.95\n41.65 | 41.65'
-```
-
-## Remote Inference
-
-### **Inference** (Requires GPU with memory > 16GB)
+### **Default Inference** (Requires GPU with memory > 16GB)
 We also have `--inference` as an optional flag that can be enabled while you execute `yoda generate` sub-command. Example usage
 ```
->> yoda generate --config config.yaml --concurrency --debug --inference
+>> yoda generate --config config.yaml --debug --inference
 ```
-At present, we are using [openbmb/MiniCPM-Llama3-V-2_5](https://huggingface.co/openbmb/MiniCPM-Llama3-V-2_5) as our inference endpoint [hosted on an AI cluster](https://github.com/redhat-performance/yoda/tree/main/vqa-app#readme) to summarize the image. Here is how the output of updated panel data looks like after the inference.
+At present, we are using [unsloth/Llama-3.2-11B-Vision-Instruct-bnb-4bit](https://huggingface.co/unsloth/Llama-3.2-11B-Vision-Instruct-bnb-4bit) as our default inference endpoint [hosted on an AI cluster](https://github.com/redhat-performance/yoda/tree/main/vqa-app#readme) to summarize the image. Here is how the output of updated panel data looks like after the inference.
 
 #### **Output**
 ```
-The image is a bar chart with two bars representing different data points. The left bar is colored green and represents a value of 4.15, while the right bar is yellow and represents a value of 4.14. Both bars have additional information displayed as text: "41.65K req/s" for the green bar and "43.95K req/s" for the yellow bar. This suggests that the chart is comparing two quantities, possibly request rates, where the yellow bar has a slightly higher value than the green bar.
+{"result":"The image shows a bar chart with two bars, each representing a different RPS (Requests Per Second) edge value. The top bar is green and has a value of 8.03k req/s, while the bottom bar is yellow and has a value of 9.01k req/s.\n\nThe chart appears to be comparing the performance of two different RPS edges, with the yellow bar indicating a higher performance than the green bar. The exact meaning of the chart is unclear without more context, but it seems to be highlighting the difference in performance between the two RPS edges."}
 ``` 
-#### Note: `--deplot` and `--inference` falgs are mutually exclusive. 
 
 At the end `yoda generate` sub-command spits out a csv file called `panel_inference.csv` that a user can take a look at. 
+
+Alongside the default inference endpoint that we manage, users can also have the flexibility to bring their own inference endpoint details using `inference-endpoint`, `inference-api-key`, `inference-model` and `inference-model-type` parameters.
+
+### Supported custom inference types and their examples
+### 1. vLLM
+#### Host your model
+```
+podman run  -v ~/.cache/huggingface:/root/.cache/huggingface --env "HUGGING_FACE_HUB_TOKEN=<YOUR_TOKEN>" -p 8000:8000 --ipc=host  quay.io/vchalla/vllm-openai-cpu:latest --model llava-hf/llava-v1.6-mistral-7b-hf
+```
+#### Yoda Usage
+```
+yoda generate --config ~/config.yaml --inference --inference-endpoint <YOUR_URL> --inference-api-key <YOUR_API_KEY> --inference-model llava-hf/llava-v1.6-mistral-7b-hf --inference-model-type vllm
+```
+**Note**: Please make sure that your vLLM hosted model responds through calls in the below format.
+```
+curl -X POST http://0.0.0.0:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llava-hf/llava-v1.6-mistral-7b-hf",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          { "type": "text", "text": "What is happening in this image?" },
+          { "type": "image_url", "image_url": { "url": "data:image/png;base64,<YOUR_BASE64_ENCODED_IMAGE>" } }
+        ]
+      }
+    ]
+  }'
+```
+### 2. ollama
+#### Host your model
+```
+ollama pull llama3.2-vision
+```
+#### Yoda Usage
+```
+yoda generate --config ~/config.yaml --inference --inference-endpoint <YOUR_URL> --inference-api-key <YOUR_API_KEY> --inference-model llama3.2-vision --inference-model-type ollama
+```
+**Note**: Please make sure that your ollama hosted model responds through calls in the below format.
+```
+curl http://localhost:11434/api/generate   -d '{
+    "model": "llama3.2-vision",
+    "prompt": "Whats in the image?",
+    "stream": false,
+    "images": ["<YOUR_BASE64_ENCODED_IMAGE>"]
+  }'
+```
+Also we have two ollama hosted models in our grafana instance which are running on cpu. Please feel free to use them at your own risk (.i.e. very slow response times)
+```
+ENDPOINT                                                              | MODEL
+http://ocp-intlab-grafana.rdu2.scalelab.redhat.com:11434/api/generate - llama3.2-vision
+http://ocp-intlab-grafana.rdu2.scalelab.redhat.com:11434/api/generate - llava
+```
+### 3. llama.cpp
+#### Host your model
+```
+/root/llama.cpp/build/bin/llama-server -m /root/llama.cpp/models/llava-v1.6-mistral-7b.Q4_K_M.gguf --host 0.0.0.0 --port 8080
+```
+#### Yoda Usage
+```
+yoda generate --config ~/config.yaml --inference --inference-endpoint <YOUR_URL> --inference-api-key <YOUR_API_KEY> --inference-model-type llama.cpp
+```
+**Note**: Please make sure that your ollama hosted model responds through calls in the below format.
+```
+curl http://ocp-intlab-grafana.rdu2.scalelab.redhat.com:8080/completion \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Whats in the image?",
+    "images": ["<YOUR_BASE64_ENCODED_IMAGE>"]
+  }'
+```
 
 ## Updating Slides
 #### Prerequisites
