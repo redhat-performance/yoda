@@ -76,11 +76,14 @@ Options:
   --inference-endpoint TEXT    Inference endpoint
   --inference-api-key TEXT     Api key to access inference endpoint
   --inference-model TEXT       Hosted model at the inference endpoint
-  --inference-model-type TEXT  Hosted model type for inference
+  --inference-model-type TEXT  Hosted model type for inference. Valid options
+                               are [vllm, ollama, llama.cpp]
   --csv TEXT                   .csv file path to output
   --presentation TEXT          Presentation id to parse
   --credentials TEXT           Google oauth credentials path
   --slidemapping TEXT          Slide content mapping file
+  --fewshotfilepath TEXT       Few shot examples file path
+  --fewshotsamples INTEGER     Number of few-shot examples to load
   --help                       Show this message and exit.
 ```
 Here is a simple example to trigger this command
@@ -223,12 +226,7 @@ curl http://localhost:11434/api/generate   -d '{
     "images": ["<YOUR_BASE64_ENCODED_IMAGE>"]
   }'
 ```
-Also we have two ollama hosted models in our grafana instance which are running on cpu. Please feel free to use them at your own risk (.i.e. very slow response times)
-```
-ENDPOINT                                                              | MODEL
-http://ocp-intlab-grafana.rdu2.scalelab.redhat.com:11434/api/generate - llama3.2-vision
-http://ocp-intlab-grafana.rdu2.scalelab.redhat.com:11434/api/generate - llava
-```
+Also we have two ollama hosted models in our grafana instance which are running on cpu. Please feel free to use them at your own risk (.i.e. very slow response times). More details can be found in Performance & Scale infrastructure document since they are only intended for internal users.
 ### 3. llama.cpp
 #### Host your model
 ```
@@ -247,6 +245,25 @@ curl http://ocp-intlab-grafana.rdu2.scalelab.redhat.com:8080/completion \
     "images": ["<YOUR_BASE64_ENCODED_IMAGE>"]
   }'
 ```
+### Few Shot Training
+We also provide flexibility for users to train the inference using their own few shot examples. All they need to do is to create a JSON file in the below format. [Example](https://github.com/redhat-performance/yoda/blob/main/few_shot_examples/few_shot_ocp.json)
+```
+{
+    "examples": [
+      {
+        "image_b64": "base64_encoded_image",
+        "query": "Can you summarize this image?",
+        "answer": "This image seems to be a test result which compares RPS edge throughput metric between two runs where the yellow bar is performing better than the green ones because 9.01k req/s againt yellow bar is greater than 8.03k req/s which is againt the green bar",
+        "explanation": "This image show to bars horizontally placed and depicting comparison between two runs. When it comes to throughput the higher the better it is. Since 9.01k req/s is greater than 8.03k req/s the yellow bar which is second run is performing better than the first one. Also its good to list the labels against them to help others understand the comparison."
+    }
+  ]
+}
+```   
+And then specify the few shots examples files path along with the number of examples that needs to be used as below
+```
+yoda generate --config /home/vchalla/config.yaml --inference --fewshotfilepath few_shot_examples/few_shot_ocp.json --fewshotsamples 1
+```
+That's it! Inference should respond based on the few shot examples from now on.
 
 ## Updating Slides
 #### Prerequisites

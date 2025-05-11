@@ -1,3 +1,4 @@
+import json
 import base64
 import requests
 import logging
@@ -17,8 +18,31 @@ def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) 
     Returns:
         None
     """
-    query, inference_endpoint, inference_api_key, inference_model, inference_model_type = args
+    query, inference_endpoint, inference_api_key, inference_model, inference_model_type, few_shot_file_path, samples_count = args
+    system_prompt = """
+    You are a Kubernetes/OpenShift performance engineer focussed on finding performance differences and regressions in new releases compared to older ones.
+    """
     context = each_panel['panel_context'] if 'panel_context' in each_panel else ""
+    if few_shot_file_path:
+        try:
+            with open(few_shot_file_path, "r") as f:
+                data = json.load(f)
+                all_examples = data.get("examples", [])
+                selected_examples = all_examples[:samples_count]
+                formatted_examples = []
+                for ex in selected_examples:
+                    formatted = (
+                        f"[Image (base64)]: {ex['image_b64']}\n"
+                        f"[Query]: {ex['query']}\n"
+                        f"[Answer]: {ex['answer']}\n"
+                        f"[Explanation]: {ex['explanation']}"
+                    )
+                    formatted_examples.append(formatted)
+                few_shot_text = "\n\n".join(formatted_examples)
+                logger.info(f"Loaded {len(selected_examples)} few-shot examples from {few_shot_file_path}")
+        except Exception as e:
+            logger.warning(f"Could not load few-shot examples: {e}")
+        query = f"{few_shot_text}\n\n{query}"
     default_inference_endpoint = "http://q42-h03-dgx.rdu3.labs.perfscale.redhat.com:30080/v1/chat/completions"
     inference_endpoint = inference_endpoint or default_inference_endpoint
 
@@ -46,23 +70,28 @@ def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) 
     with open(each_panel["panel_image"], "rb") as img_file:
         image_b64 = base64.b64encode(img_file.read()).decode("utf-8")
 
+    payload = {}
+    url = f""    
     match inference_model_type:
         case "vllm":
             payload = {
                 "model": inference_model,
                 "messages": [
+                    {"role": "system", "content": system_prompt} if system_prompt else {},
                     {"role": "user", "content": [
-                        {"type": "text", "text": query},
+                        {"type": "text", "text": f"{context}\n\n{query}" if context else query},
                         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"}} if image_b64 else {}
                     ]}
                 ],
             }
+            payload["messages"] = [msg for msg in payload["messages"] if msg]
             url = f"{inference_endpoint}/v1/chat/completions"
 
         case "ollama":
+            prompt = f"{system_prompt}\n\n{context}\n\n{query}" if system_prompt else f"{context}\n\n{query}" if context else query
             payload = {
                 "model": inference_model,
-                "prompt": query,
+                "prompt": prompt,
                 "stream": False,
             }
             if image_b64:
@@ -70,8 +99,9 @@ def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) 
             url = f"{inference_endpoint}/api/generate"
 
         case "llama.cpp":
+            prompt = f"{system_prompt}\n\n{context}\n\n{query}" if system_prompt else f"{context}\n\n{query}" if context else query
             payload = {
-                "prompt": query,
+                "prompt": prompt,
                 "stream": False,
             }
             if image_b64:
@@ -79,7 +109,8 @@ def image_inference(each_panel: dict, args: tuple, return_dict: dict, idx: int) 
             url = f"{inference_endpoint}/completion"
 
         case _:
-            raise ValueError(f"Unsupported model_type: {inference_model_type}")
+            logger.info(f"Unsupported model_type: {inference_model_type}")
+            return
 
     try:
 

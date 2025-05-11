@@ -35,6 +35,8 @@ def cli(max_content_width=120):
 @click.option("--presentation", default="", help="Presentation id to parse")
 @click.option("--credentials", default="credentials.json", help="Google oauth credentials path")
 @click.option("--slidemapping", default="config/slide_content_mapping.yaml", help="Slide content mapping file")
+@click.option("--fewshotfilepath", default="", help="Few shot examples file path")
+@click.option("--fewshotsamples", type=int, default=0, help="Number of few-shot examples to load")
 def generate(**kwargs):
     """
     sub-command to generate a grafana panels and infer them. Optionally executes the default worklfow to publish those results to a presentation.
@@ -154,7 +156,9 @@ def process_grafana_config(grafana_data: list, concurrency: int, need_inference:
                                                        kwargs["inference_endpoint"], 
                                                        kwargs["inference_api_key"], 
                                                        kwargs["inference_model"],
-                                                       kwargs["inference_model_type"])
+                                                       kwargs["inference_model_type"],
+                                                       kwargs["fewshotfilepath"],
+                                                       kwargs["fewshotsamples"])
                                                     )
                                                 )
             processed_panels = flatten_list(processed_panels)
