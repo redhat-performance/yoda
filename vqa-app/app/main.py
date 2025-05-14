@@ -1,82 +1,75 @@
-# app/main.py
-
 from fastapi import FastAPI, File, Form, UploadFile
+from typing import List
 from PIL import Image
-from transformers import AutoModel, AutoTokenizer
+from transformers import MllamaForConditionalGeneration, AutoProcessor
 import torch
-from torch.cuda.amp import autocast
 import os
 import logging
 
+app = FastAPI()
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
-
-# Define cache directory
 CACHE_DIR = "/app/transformers_cache"
-
-# Ensure the cache directory exists
 os.makedirs(CACHE_DIR, exist_ok=True)
-
-# Set environment variable to work in offline mode
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
-@app.post("/inference/")
-async def inference(file: UploadFile = File(...), context: str = Form(""), query: str = Form("Can you summarize this image?")):
-    file_location = f"/app/{file.filename}"
-    
-    try:
-        # Save the uploaded file
-        with open(file_location, "wb") as f:
-            contents = await file.read()
-            f.write(contents)
-        
-        # Verify if the file is a valid image
-        try:
-            image = Image.open(file_location).convert('RGB')
-        except Exception as e:
-            return {"error": f"Cannot identify image file: {e}"}
-        
-        # Proceed with your image inference code
-        
-        if torch.cuda.is_available():
-            logger.info(f"GPU detected. Proceeding with inference for image: {file_location}")
-        else:
-            logger.info(f"No GPU detected. Sorry cannot run inference for image: {file_location}")
-            return ""
+model_id = "unsloth/Llama-3.2-11B-Vision-Instruct-bnb-4bit"
+model = MllamaForConditionalGeneration.from_pretrained(
+    model_id,
+    cache_dir=CACHE_DIR,
+    torch_dtype=torch.bfloat16,
+    revision="25bca24a9e42116fe4a687fba648124be4af45f6",
+    trust_remote_code=True,
+    device_map="auto",
+)
+processor = AutoProcessor.from_pretrained(model_id, cache_dir=CACHE_DIR)
 
-        input_prompt = f"{context}\nQuestion: {query}"
-        msgs = [{'role': 'user', 'content': input_prompt}]
-        response = ""
-        try:
-            model = AutoModel.from_pretrained('openbmb/MiniCPM-Llama3-V-2_5', cache_dir=CACHE_DIR, revision='e978c4c9b177e8d1f36deeec20edb18377dc2ff7', trust_remote_code=True, torch_dtype=torch.float16)
-            model = model.to(device='cuda')
-            tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-Llama3-V-2_5', cache_dir=CACHE_DIR, revision='e978c4c9b177e8d1f36deeec20edb18377dc2ff7', trust_remote_code=True)
-            model.eval()
+@app.post("/v1/chat/completions")
+async def inference(
+    image: UploadFile = File(...),
+    query: str = Form(...),
+    context: str = Form(""),
+    few_shot_images: List[UploadFile] = File([]),
+    few_shot_texts: List[str] = Form([]),
+    few_shot_outputs: List[str] = Form([]),
+):
+    def load_image(upload_file: UploadFile) -> Image.Image:
+        img_path = f"/tmp/{upload_file.filename}"
+        with open(img_path, "wb") as f:
+            f.write(upload_file.file.read())
+        return Image.open(img_path).convert("RGB")
 
-            # Use autocast for mixed precision to save memory
-            with autocast():
-                response = model.chat(
-                    image=image,
-                    msgs=msgs,
-                    tokenizer=tokenizer,
-                    sampling=True,
-                    temperature=0.7,
-                    system_prompt="You are an expert in analysing openshift performance metrics",
-                )
+    if not torch.cuda.is_available():
+        return {"result": "GPU not available. Sorry cannot proceed further"}
 
-        except torch.cuda.OutOfMemoryError:
-            print("CUDA out of memory. Clearing cache and retrying...")
-            torch.cuda.empty_cache()
-            return "error: CUDA out of memory"
-            
-        
-        # Free up memory
-        torch.cuda.empty_cache()
+    messages = []
+    images = []
 
-        return response
+    for img_file, txt, out in zip(few_shot_images, few_shot_texts, few_shot_outputs):
+        images.append(load_image(img_file))
+        messages.append({"role": "user", "content": [{"type": "image"}, {"type": "text", "text": txt.strip()}]})
+        messages.append({"role": "assistant", "content": out.strip()})
 
-    finally:
-        # Delete the file after processing
-        if os.path.exists(file_location):
-            os.remove(file_location)
+    images.append(load_image(image))
+    messages.append({
+        "role": "user",
+        "content": [
+            {"type": "image"},
+            {"type": "text", "text": f"{context.strip()} {query.strip()}"}
+        ]
+    })
+
+    input_text = processor.apply_chat_template(messages, add_generation_prompt=True)
+    inputs = processor(
+        images=[images],
+        text=input_text,
+        add_special_tokens=False,
+        return_tensors="pt"
+    ).to(model.device)
+
+    output = model.generate(**inputs, max_new_tokens=300)
+    result = processor.decode(output[0], skip_special_tokens=True)
+    final_response = result.strip().split("assistant")[-1].strip()
+
+    torch.cuda.empty_cache()
+    return {"result": final_response}

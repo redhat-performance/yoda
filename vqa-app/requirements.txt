@@ -5,3 +5,10 @@ torch
 pillow
 torchvision
 deepspeed
+python-multipart
+accelerate
+auto-gptq
+optimum[onnxruntime]
+fsspec[http]>=2023.1.0,<=2024.9.0
+compressed-tensors
+bitsandbytes

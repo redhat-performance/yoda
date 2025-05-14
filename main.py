@@ -7,7 +7,6 @@ import multiprocessing as mp
 from googleapiclient.discovery import build
 from urllib.parse import urlparse, parse_qs
 from src.grafana import export_panels, extract_panels, preview_grafana_dashboard
-from src.deplot import image_deplot
 from src.inference import image_inference
 from src.slides import authenticate_google_slides, get_slide_info, replace_images_and_text
 from utils.logging import configure_logging
@@ -27,21 +26,23 @@ def cli(max_content_width=120):
 @click.option("--config", default="config/grafana_config.yaml", help="Path to the configuration file")
 @click.option("--debug", is_flag=True, help="log level")
 @click.option("--concurrency", is_flag=True, help="To enable concurrent operations")
-@click.option("--deplot", is_flag=True, help="Flag for deplot")
 @click.option("--inference", is_flag=True, help="Flag for inference")
+@click.option("--inference-endpoint", default="", help="Inference endpoint")
+@click.option("--inference-api-key", default="", help="Api key to access inference endpoint")
+@click.option("--inference-model", default="", help="Hosted model at the inference endpoint")
+@click.option("--inference-model-type", default="", help="Hosted model type for inference. Valid options are [vllm, ollama, llama.cpp]")
 @click.option("--csv", default="panel_inference.csv", help=".csv file path to output")
 @click.option("--presentation", default="", help="Presentation id to parse")
 @click.option("--credentials", default="credentials.json", help="Google oauth credentials path")
 @click.option("--slidemapping", default="config/slide_content_mapping.yaml", help="Slide content mapping file")
+@click.option("--fewshotfilepath", default="", help="Few shot examples file path")
+@click.option("--fewshotsamples", type=int, default=0, help="Number of few-shot examples to load")
 def generate(**kwargs):
     """
     sub-command to generate a grafana panels and infer them. Optionally executes the default worklfow to publish those results to a presentation.
     """
     level = logging.DEBUG if kwargs["debug"] else logging.INFO
-    need_deplot = True if kwargs["deplot"] else False
     need_inference = True if kwargs["inference"] else False
-    if need_deplot and need_inference:
-        raise click.UsageError("Cannot use --deplot and --inference together.")
     concurrency = (75 * mp.cpu_count())//100 if kwargs["concurrency"] else 1
     configure_logging(level)
     global logger
@@ -50,7 +51,7 @@ def generate(**kwargs):
     logger.debug(config_data)
 
     # TODO: Add support for other data sources as well
-    process_grafana_config(config_data['grafana'], concurrency, kwargs["csv"], need_deplot, need_inference, kwargs["presentation"], kwargs["credentials"], kwargs["slidemapping"])
+    process_grafana_config(config_data['grafana'], concurrency, need_inference, kwargs)
 
 @cli.command(name="preview-dashboard")
 @click.option("--url", default="", help="Grafana dashboard url to preview")
@@ -114,19 +115,15 @@ def update_presentation(**kwargs):
     except Exception as e:
         logger.error(f"Please make sure the provided credentials are correct. Error: {e}")
 
-def process_grafana_config(grafana_data: list, concurrency: int, inference_path: str, need_deplot: bool, need_inference: bool, presentation: str, credentials: str, slide_mapping: str) -> None:
+def process_grafana_config(grafana_data: list, concurrency: int, need_inference: bool, kwargs: dict[str, any]) -> None:
     """
     Function to process the grafana config.
 
     Args:
         grafana_data (list): grafana configuration list
         concurrency (int): concurrency to implement parallelism
-        inference_path (str): inference file path post processing
-        need_deplot (bool): flag to regulate deplot
         need_inference (bool): flag to regulate inference
-        presentation (str): presentation id to parse
-        credentials (str): credentails for google oauth
-        slide_mapping (str): slide content mapping to update presentation
+        kwargs (dict[str, any]): Additional application arguments
 
     Returns:
         None
@@ -149,18 +146,21 @@ def process_grafana_config(grafana_data: list, concurrency: int, inference_path:
             all_panels.extend(multi_process(dashboard_chunk, process_dashboard, (g_url, g_username, g_password, concurrency)))
         updated_panels = flatten_list(all_panels)
 
-        if need_deplot:
+        if need_inference:
             processed_panels = []
             for i in range(0, len(updated_panels), concurrency):
                 panel_chunk = updated_panels[i: i + concurrency]
-                processed_panels.extend(multi_process(panel_chunk, image_deplot, ("Generate underlying data table of the figure below:")))
-            processed_panels = flatten_list(processed_panels)
-            updated_panels = processed_panels
-        elif need_inference:
-            processed_panels = []
-            for i in range(0, len(updated_panels), concurrency):
-                panel_chunk = updated_panels[i: i + concurrency]
-                processed_panels.extend(multi_process(panel_chunk, image_inference, ("Can you summarize this image?")))
+                processed_panels.extend(multi_process(panel_chunk, 
+                                                      image_inference, 
+                                                      ("Can you summarize this image?", 
+                                                       kwargs["inference_endpoint"], 
+                                                       kwargs["inference_api_key"], 
+                                                       kwargs["inference_model"],
+                                                       kwargs["inference_model_type"],
+                                                       kwargs["fewshotfilepath"],
+                                                       kwargs["fewshotsamples"])
+                                                    )
+                                                )
             processed_panels = flatten_list(processed_panels)
             updated_panels = processed_panels
         
@@ -171,20 +171,20 @@ def process_grafana_config(grafana_data: list, concurrency: int, inference_path:
         for panel in updated_panels:
             panel_text = panel["panel_text"] if "panel_text" in panel else ""
             data.append([panel["panel_image"], panel_text])
-        with open(inference_path, mode='w', newline='', encoding='utf-8') as file:
+        with open(kwargs["csv"], mode='w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerows(data)
-        logger.info(f"Panels summary exported to file: {inference_path}")
+        logger.info(f"Panels summary exported to file: {kwargs["csv"]}")
 
-        if presentation != "" and slide_mapping != "":
-            logger.info(f"Presentation ID specified. Trying to apply default slide mapping at {slide_mapping}")
-            creds = authenticate_google_slides(credentials)
+        if kwargs["presentation"] != "" and kwargs["slidemapping"] != "":
+            logger.info(f"Presentation ID specified. Trying to apply default slide mapping at {kwargs["slidemapping"]}")
+            creds = authenticate_google_slides(kwargs["credentials"])
             service = build('slides', 'v1', credentials=creds)
-            slide_info = get_slide_info(service, presentation, False)
-            slide_content_mapping = load_config(slide_mapping)
-            response = replace_images_and_text(service, presentation, slide_info, slide_content_mapping)
+            slide_info = get_slide_info(service, kwargs["presentation"], False)
+            slide_content_mapping = load_config(kwargs["slidemapping"])
+            response = replace_images_and_text(service, kwargs["presentation"], slide_info, slide_content_mapping)
             logger.debug(response)
-            logger.info(f"Presentation: {presentation} has been updated successfully")
+            logger.info(f"Presentation: {kwargs["presentation"]} has been updated successfully")
 
 def process_dashboard(each_dashboard: dict, args: tuple, return_dict: dict, idx: int) -> None:
     """

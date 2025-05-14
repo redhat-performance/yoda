@@ -1,5 +1,5 @@
 resources:
   - namespace.yaml
-  - openbmb-minicpm-secret.yaml
+  - huggingface-secret.yaml
   - vqa-app-service.yaml
   - vqa-app-deployment.yaml

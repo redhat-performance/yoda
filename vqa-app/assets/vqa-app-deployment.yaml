@@ -26,6 +26,6 @@ spec:
         - name: HF_TOKEN
           valueFrom:
             secretKeyRef:
-              name: openbmb-minicpm-secret
+              name: huggingface-secret
               key: HF_TOKEN
 
